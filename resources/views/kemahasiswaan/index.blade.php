@@ -123,8 +123,9 @@
                                     <div class="font-bold text-gray-900 text-sm">
                                         {{ $ajuan->nama_kegiatan }}
                                     </div>
-                                    <div class="text-xs text-indigo-700 font-mono font-semibold mt-0.5">
-                                        Total: Rp {{ number_format($ajuan->total_anggaran, 0, ',', '.') }}
+                                    <div class="text-xs font-mono font-semibold mt-0.5 flex items-center gap-1.5">
+                                        <span class="font-sans font-semibold text-purple-700 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-200 text-[10px]">{{ $ajuan->jenis_kegiatan ?? 'Lainnya' }}</span>
+                                        <span class="text-indigo-700">Rp {{ number_format($ajuan->total_anggaran, 0, ',', '.') }}</span>
                                     </div>
                                 </td>
                                 <!-- Tanggal Kegiatan -->

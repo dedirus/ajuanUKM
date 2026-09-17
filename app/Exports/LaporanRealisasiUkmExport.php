@@ -186,6 +186,9 @@ class RincianKegiatanSheet implements FromArray, WithHeadings, WithTitle, Should
 
             $statusAkhir = match($item->status_akhir) {
                 'disetujui' => 'Disetujui',
+                'menunggu_verifikasi_lpj' => 'Verifikasi LPJ',
+                'revisi_lpj' => 'Revisi LPJ',
+                'sudah_dilaksanakan' => 'Sudah Dilaksanakan',
                 'ditolak' => 'Ditolak',
                 'revisi_pembina' => 'Revisi Pembina',
                 'revisi_kemahasiswaan' => 'Revisi Kemahasiswaan',

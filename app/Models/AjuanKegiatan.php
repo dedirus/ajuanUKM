@@ -18,6 +18,7 @@ class AjuanKegiatan extends Model
         'ukm_id',
         'nama_kegiatan',
         'tanggal_kegiatan',
+        'jenis_kegiatan',
         'dokumen_proposal',
         'dokumen_nama_asli',
         'total_anggaran',
@@ -72,6 +73,11 @@ class AjuanKegiatan extends Model
         $this->save();
     }
 
+    public function isBisaDieditMahasiswa(): bool
+    {
+        return ! in_array($this->status_akhir, ['disetujui', 'sudah_dilaksanakan', 'menunggu_verifikasi_lpj', 'revisi_lpj']);
+    }
+
     public function isPerluRevisi(): bool
     {
         return in_array($this->status_akhir, ['revisi_pembina', 'revisi_kemahasiswaan', 'ditolak'])
@@ -94,5 +100,60 @@ class AjuanKegiatan extends Model
             || $this->status_kemahasiswaan === 'ditolak'
             || $this->status_kemahasiswaan === 'revisi'
             || ($this->status_akhir === 'ditolak' && $this->status_pembina !== 'ditolak');
+    }
+
+    public function lpj(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(LpjKegiatan::class, 'ajuan_kegiatan_id');
+    }
+
+    public function isSiapLpj(): bool
+    {
+        return $this->status_akhir === 'disetujui'
+            && $this->tanggal_kegiatan->lessThanOrEqualTo(today());
+    }
+
+    public function isMenungguVerifikasiLpj(): bool
+    {
+        return $this->status_akhir === 'menunggu_verifikasi_lpj';
+    }
+
+    public function isRevisiLpj(): bool
+    {
+        return $this->status_akhir === 'revisi_lpj';
+    }
+
+    public function isSudahDilaksanakan(): bool
+    {
+        return $this->status_akhir === 'sudah_dilaksanakan';
+    }
+
+    public function riwayats(): HasMany
+    {
+        return $this->hasMany(RiwayatKegiatan::class, 'ajuan_kegiatan_id')->orderBy('created_at', 'asc')->orderBy('id', 'asc');
+    }
+
+    /**
+     * Catat jejak riwayat aktivitas usulan kegiatan.
+     */
+    public function catatRiwayat(
+        string $aksi,
+        ?string $statusSesudah = null,
+        ?string $catatan = null,
+        ?string $statusSebelumnya = null,
+        ?int $userId = null,
+        ?string $role = null
+    ): RiwayatKegiatan {
+        $user = $userId ? User::find($userId) : auth()->user();
+        $roleName = $role ?? ($user?->role ?? 'sistem');
+
+        return $this->riwayats()->create([
+            'user_id' => $user?->id,
+            'role' => $roleName,
+            'aksi' => $aksi,
+            'status_sebelumnya' => $statusSebelumnya,
+            'status_sesudah' => $statusSesudah ?? $this->status_akhir,
+            'catatan' => $catatan,
+        ]);
     }
 }

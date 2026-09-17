@@ -19,6 +19,9 @@ class DetailKegiatan extends Model
         'nama_barang',
         'harga_satuan',
         'jumlah',
+        'satuan',
+        'durasi',
+        'satuan_durasi',
         'total',
         'status_keterangan',
         'catatan',
@@ -27,6 +30,7 @@ class DetailKegiatan extends Model
     protected $casts = [
         'harga_satuan' => 'decimal:2',
         'jumlah' => 'integer',
+        'durasi' => 'float',
         'total' => 'decimal:2',
         'no_urut' => 'integer',
     ];

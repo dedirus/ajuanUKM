@@ -66,8 +66,9 @@
                                     <div class="font-bold text-gray-900 text-base">
                                         {{ $ajuan->nama_kegiatan }}
                                     </div>
-                                    <div class="text-xs text-gray-400 mt-0.5">
-                                        Diajukan oleh: <span class="text-gray-600 font-medium">{{ $ajuan->user->name ?? 'Mahasiswa' }}</span>
+                                    <div class="text-xs text-gray-400 mt-0.5 flex items-center gap-1.5">
+                                        <span class="font-semibold text-purple-700 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-200 text-[10px]">{{ $ajuan->jenis_kegiatan ?? 'Lainnya' }}</span>
+                                        <span>• Oleh: <span class="text-gray-600 font-medium">{{ $ajuan->user->name ?? 'Mahasiswa' }}</span></span>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 text-gray-700 whitespace-nowrap">

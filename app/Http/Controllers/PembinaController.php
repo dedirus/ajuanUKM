@@ -38,7 +38,7 @@ class PembinaController extends Controller
 
         $ajuan = AjuanKegiatan::where('id', $id)
             ->where('ukm_id', $user->ukm_id)
-            ->with(['ukm', 'user', 'details', 'pembinaVerifier', 'kemahasiswaanVerifier'])
+            ->with(['ukm', 'user', 'details', 'pembinaVerifier', 'kemahasiswaanVerifier', 'lpj.pesertas', 'lpj.prestasies', 'riwayats.user'])
             ->firstOrFail();
 
         return view('pembina.show', compact('user', 'ajuan'));
@@ -67,23 +67,41 @@ class PembinaController extends Controller
         $ajuan->verified_pembina_at = now();
         $ajuan->verified_pembina_by = $user->id;
 
+        $statusSebelumnya = $ajuan->status_akhir;
+
         if ($validated['status'] === 'disetujui') {
             // Jika sebelumnya belum disetujui kemahasiswaan, ubah status akhir menjadi menunggu kemahasiswaan
             if ($ajuan->status_kemahasiswaan !== 'disetujui') {
                 $ajuan->status_akhir = 'menunggu_kemahasiswaan';
             }
             $pesan = "Ajuan kegiatan '{$ajuan->nama_kegiatan}' berhasil disetujui oleh Pembina!";
+            $aksi = 'Persetujuan Pembina';
+            $catatan = $validated['catatan'] ?: 'Usulan kegiatan disetujui oleh Dosen Pembina.';
         } elseif ($validated['status'] === 'revisi') {
             $ajuan->status_akhir = 'revisi_pembina';
             $ajuan->catatan_revisi_terakhir = $validated['catatan'];
             $pesan = "Permintaan revisi berhasil dikirimkan ke mahasiswa dengan catatan.";
+            $aksi = 'Permintaan Revisi (Pembina)';
+            $catatan = $validated['catatan'];
         } else {
             $ajuan->status_akhir = 'ditolak';
             $ajuan->catatan_revisi_terakhir = $validated['catatan'];
             $pesan = "Ajuan kegiatan '{$ajuan->nama_kegiatan}' telah ditolak.";
+            $aksi = 'Penolakan Usulan (Pembina)';
+            $catatan = $validated['catatan'];
         }
 
         $ajuan->save();
+
+        // Catat log riwayat verifikasi Pembina
+        $ajuan->catatRiwayat(
+            aksi: $aksi,
+            statusSesudah: $ajuan->status_akhir,
+            catatan: $catatan,
+            statusSebelumnya: $statusSebelumnya,
+            userId: $user->id,
+            role: 'pembina'
+        );
 
         return redirect()->route('pembina.show', $ajuan->id)->with('success', $pesan);
     }
@@ -103,5 +121,35 @@ class PembinaController extends Controller
         }
 
         return Storage::disk('public')->download($ajuan->dokumen_proposal, $ajuan->dokumen_nama_asli);
+    }
+
+    /**
+     * Unduh berkas dokumen LPJ untuk Pembina UKM.
+     */
+    public function downloadLpjFile(int $id, string $type): StreamedResponse
+    {
+        $user = Auth::user();
+        $ajuan = AjuanKegiatan::where('id', $id)
+            ->where('ukm_id', $user->ukm_id)
+            ->with('lpj')
+            ->firstOrFail();
+
+        $lpj = $ajuan->lpj;
+        if (! $lpj) {
+            abort(404, 'Data LPJ belum tersedia.');
+        }
+
+        $fieldMap = [
+            'sertifikat' => ['path' => $lpj->file_sertifikat, 'name' => $lpj->file_sertifikat_nama],
+            'foto_kegiatan' => ['path' => $lpj->foto_kegiatan, 'name' => $lpj->foto_kegiatan_nama],
+            'foto_penyerahan' => ['path' => $lpj->foto_penyerahan, 'name' => $lpj->foto_penyerahan_nama],
+            'surat_undangan' => ['path' => $lpj->surat_undangan, 'name' => $lpj->surat_undangan_nama],
+        ];
+
+        if (! isset($fieldMap[$type]) || ! $fieldMap[$type]['path'] || ! Storage::disk('public')->exists($fieldMap[$type]['path'])) {
+            abort(404, 'Berkas LPJ tidak ditemukan di server.');
+        }
+
+        return Storage::disk('public')->download($fieldMap[$type]['path'], $fieldMap[$type]['name'] ?? 'dokumen_lpj');
     }
 }

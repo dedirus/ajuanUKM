@@ -74,8 +74,9 @@
                                     <a href="{{ route('mahasiswa.show', $ajuan->id) }}" class="hover:text-indigo-600 hover:underline">
                                         {{ $ajuan->nama_kegiatan }}
                                     </a>
-                                    <div class="text-xs text-gray-400 font-normal mt-0.5">
-                                        Item Kebutuhan: {{ $ajuan->details->count() }} rincian
+                                    <div class="text-xs text-gray-400 font-normal mt-0.5 flex items-center gap-1.5">
+                                        <span class="font-semibold text-purple-700 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-200 text-[10px]">{{ $ajuan->jenis_kegiatan ?? 'Lainnya' }}</span>
+                                        <span>• {{ $ajuan->details->count() }} rincian item</span>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 text-gray-700 whitespace-nowrap">
@@ -123,10 +124,28 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">
-                                    @if($ajuan->status_akhir === 'disetujui')
-                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-500 text-white shadow-sm">
-                                            Selesai Disetujui
+                                    @if($ajuan->status_akhir === 'sudah_dilaksanakan')
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-600 text-white shadow-sm">
+                                            ✓ Sudah Dilaksanakan
                                         </span>
+                                    @elseif($ajuan->status_akhir === 'menunggu_verifikasi_lpj')
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-purple-600 text-white shadow-sm">
+                                            ⏳ Verifikasi LPJ
+                                        </span>
+                                    @elseif($ajuan->status_akhir === 'revisi_lpj')
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-rose-600 text-white shadow-sm">
+                                            ⚠️ Perlu Revisi LPJ
+                                        </span>
+                                    @elseif($ajuan->status_akhir === 'disetujui')
+                                        @if($ajuan->tanggal_kegiatan->lessThanOrEqualTo(today()))
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-500 text-white shadow-sm">
+                                                📢 Menunggu LPJ
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-500 text-white shadow-sm">
+                                                Selesai Disetujui
+                                            </span>
+                                        @endif
                                     @elseif($ajuan->status_akhir === 'revisi_pembina')
                                         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-500 text-white shadow-sm">
                                             Perlu Revisi Pembina
@@ -151,10 +170,16 @@
                                 </td>
                                 <td class="px-6 py-4 text-right whitespace-nowrap">
                                     <div class="flex items-center justify-end space-x-2">
-                                        @if($ajuan->isPerluRevisi())
-                                            <a href="{{ route('mahasiswa.edit', $ajuan->id) }}" class="inline-flex items-center px-2.5 py-1.5 {{ $ajuan->status_akhir === 'ditolak' ? 'bg-rose-600 hover:bg-rose-700' : 'bg-amber-500 hover:bg-amber-600' }} text-white rounded-lg text-xs font-bold shadow-sm transition gap-1">
+                                        @if($ajuan->isSiapLpj() || $ajuan->isRevisiLpj())
+                                            <a href="{{ route('mahasiswa.lpj', $ajuan->id) }}" class="inline-flex items-center px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold shadow-sm transition gap-1">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                                <span>{{ $ajuan->isRevisiLpj() ? 'Revisi LPJ' : 'Lapor LPJ' }}</span>
+                                            </a>
+                                        @endif
+                                        @if($ajuan->isBisaDieditMahasiswa())
+                                            <a href="{{ route('mahasiswa.edit', $ajuan->id) }}" class="inline-flex items-center px-2.5 py-1.5 {{ $ajuan->isPerluRevisi() ? ($ajuan->status_akhir === 'ditolak' ? 'bg-rose-600 hover:bg-rose-700' : 'bg-amber-500 hover:bg-amber-600') : 'bg-indigo-600 hover:bg-indigo-700' }} text-white rounded-lg text-xs font-bold shadow-sm transition gap-1">
                                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                                <span>Perbaiki</span>
+                                                <span>{{ $ajuan->status_akhir === 'ditolak' ? 'Perbaiki' : ($ajuan->isPerluRevisi() ? 'Perbaiki' : 'Edit') }}</span>
                                             </a>
                                         @endif
                                         <a href="{{ route('mahasiswa.show', $ajuan->id) }}" class="inline-flex items-center px-3 py-1.5 bg-gray-100 hover:bg-indigo-50 hover:text-indigo-600 text-gray-700 rounded-lg text-xs font-semibold transition gap-1">

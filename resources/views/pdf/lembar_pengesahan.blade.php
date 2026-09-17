@@ -402,6 +402,11 @@
             <td class="info-value"><strong>{{ $ajuan->nama_kegiatan }}</strong></td>
         </tr>
         <tr>
+            <td class="info-label">Jenis Kegiatan</td>
+            <td class="info-separator">:</td>
+            <td class="info-value"><strong>{{ $ajuan->jenis_kegiatan ?? 'Lainnya' }}</strong></td>
+        </tr>
+        <tr>
             <td class="info-label">Tanggal Pelaksanaan</td>
             <td class="info-separator">:</td>
             <td class="info-value">
@@ -437,12 +442,15 @@
     <table class="rab-table">
         <thead>
             <tr>
-                <th style="width: 5%;">No</th>
-                <th style="width: 20%;">Akun Kebutuhan</th>
-                <th style="width: 30%;">Uraian Barang / Jasa</th>
-                <th style="width: 14%;">Harga Satuan</th>
-                <th style="width: 7%;">Jml</th>
-                <th style="width: 14%;">Total Biaya</th>
+                <th style="width: 3%;">No</th>
+                <th style="width: 15%;">Akun Kebutuhan</th>
+                <th style="width: 22%;">Uraian Barang / Jasa</th>
+                <th style="width: 13%;">Harga Satuan</th>
+                <th style="width: 5%;">Jml</th>
+                <th style="width: 7%;">Satuan</th>
+                <th style="width: 5%;">Durasi</th>
+                <th style="width: 7%;">Sat. Durasi</th>
+                <th style="width: 13%;">Total Biaya</th>
                 <th style="width: 10%;">Verifikasi</th>
             </tr>
         </thead>
@@ -459,6 +467,9 @@
                     </td>
                     <td class="right">Rp {{ number_format($item->harga_satuan, 0, ',', '.') }}</td>
                     <td class="center">{{ $item->jumlah }}</td>
+                    <td class="center">{{ $item->satuan ?? '-' }}</td>
+                    <td class="center">{{ (float)$item->durasi == (int)$item->durasi ? (int)$item->durasi : $item->durasi }}</td>
+                    <td class="center">{{ $item->satuan_durasi ?? 'Hari' }}</td>
                     <td class="right">Rp {{ number_format($item->total, 0, ',', '.') }}</td>
                     <td class="center">
                         @if($item->status_keterangan === 'disetujui')
@@ -472,19 +483,19 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="center" style="font-style: italic; color: #94a3b8;">Tidak ada rincian kebutuhan kegiatan.</td>
+                    <td colspan="10" class="center" style="font-style: italic; color: #94a3b8;">Tidak ada rincian kebutuhan kegiatan.</td>
                 </tr>
             @endforelse
         </tbody>
         <tfoot>
             <tr class="rab-total-row">
-                <td colspan="5" style="text-align: right; padding-right: 8px;">Total Usulan Anggaran:</td>
+                <td colspan="8" style="text-align: right; padding-right: 8px;">Total Usulan Anggaran:</td>
                 <td class="right">Rp {{ number_format($totalDiajukan, 0, ',', '.') }}</td>
                 <td class="center">-</td>
             </tr>
             @if($ajuan->status_akhir === 'disetujui')
                 <tr class="rab-total-row" style="background-color: #ecfdf5; color: #065f46;">
-                    <td colspan="5" style="text-align: right; padding-right: 8px;"><strong>Total Anggaran Disetujui Kemahasiswaan:</strong></td>
+                    <td colspan="8" style="text-align: right; padding-right: 8px;"><strong>Total Anggaran Disetujui Kemahasiswaan:</strong></td>
                     <td class="right" style="color: #047857;"><strong>Rp {{ number_format($totalDisetujui, 0, ',', '.') }}</strong></td>
                     <td class="center" style="color: #047857;"><strong>FINAL</strong></td>
                 </tr>

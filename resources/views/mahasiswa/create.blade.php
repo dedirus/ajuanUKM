@@ -61,8 +61,25 @@
                         @enderror
                     </div>
 
-                    <!-- Upload Dokumen Kegiatan (Proposal / ToR) -->
+                    <!-- Jenis Kegiatan -->
                     <div>
+                        <label for="jenis_kegiatan" class="block text-sm font-semibold text-gray-700 mb-1">
+                            Jenis Kegiatan <span class="text-rose-500">*</span>
+                        </label>
+                        <select id="jenis_kegiatan" name="jenis_kegiatan" required
+                                class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm text-sm">
+                            <option value="" disabled {{ old('jenis_kegiatan') ? '' : 'selected' }}>-- Pilih Jenis Kegiatan --</option>
+                            <option value="Lomba" {{ old('jenis_kegiatan') === 'Lomba' ? 'selected' : '' }}>Lomba</option>
+                            <option value="Pelatihan" {{ old('jenis_kegiatan') === 'Pelatihan' ? 'selected' : '' }}>Pelatihan</option>
+                            <option value="Lainnya" {{ old('jenis_kegiatan') === 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                        </select>
+                        @error('jenis_kegiatan')
+                            <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Upload Dokumen Kegiatan (Proposal / ToR) -->
+                    <div class="md:col-span-2">
                         <label class="block text-sm font-semibold text-gray-700 mb-1">
                             Upload Dokumen Kegiatan (Proposal / ToR) <span class="text-rose-500">*</span>
                         </label>
@@ -110,16 +127,15 @@
             </div>
 
             <!-- Bagian 2: CRUD Table Detail Kebutuhan Kegiatan -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8 space-y-6">
-                <div class="border-b border-gray-100 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 sm:p-6 space-y-4">
+                <div class="border-b border-gray-100 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                        <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
-                            <span class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm">2</span>
+                        <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs">2</span>
                             Tabel Detail Kebutuhan Kegiatan (RAB)
                         </h3>
                         <p class="text-xs text-gray-500 mt-0.5">
-                            Isi detail barang, harga satuan, dan kuantitas. Total terhitung otomatis.
-                            <span class="text-amber-600 font-medium">Kolom status Keterangan (Disetujui/Tidak Disetujui) bersifat read-only untuk mahasiswa dan akan diverifikasi oleh Kemahasiswaan.</span>
+                            Total terhitung otomatis: <strong class="text-indigo-600">Jumlah &times; Harga Satuan &times; Durasi</strong>.
                         </p>
                     </div>
 
@@ -129,86 +145,97 @@
                     </button>
                 </div>
 
-                <!-- Interactive CRUD Table -->
-                <div class="overflow-x-auto rounded-xl border border-gray-200">
-                    <table class="min-w-full divide-y divide-gray-200 text-xs">
-                        <thead class="bg-slate-100 text-slate-700 font-bold uppercase tracking-wider">
+                <!-- Interactive CRUD Table (Fit to screen, no horizontal scroll) -->
+                <div class="w-full overflow-x-auto rounded-xl border border-gray-200">
+                    <table class="w-full divide-y divide-gray-200 text-xs table-fixed">
+                        <thead class="bg-slate-100 text-slate-700 font-bold uppercase tracking-wider text-[11px]">
                             <tr>
-                                <th class="px-3 py-3 text-center w-12">No</th>
-                                <th class="px-3 py-3 text-left min-w-[140px]">Nama Akun</th>
-                                <th class="px-3 py-3 text-left min-w-[180px]">Nama Barang / Item</th>
-                                <th class="px-3 py-3 text-right min-w-[130px]">Harga Satuan (Rp)</th>
-                                <th class="px-3 py-3 text-center min-w-[90px]">Jumlah</th>
-                                <th class="px-3 py-3 text-right min-w-[130px]">Total (Rp)</th>
-                                <th class="px-3 py-3 text-center min-w-[170px]">Keterangan (Status)</th>
-                                <th class="px-3 py-3 text-left min-w-[160px]">Catatan Mahasiswa</th>
-                                <th class="px-3 py-3 text-center w-12">Aksi</th>
+                                <th class="px-1.5 py-2.5 text-center w-8">No</th>
+                                <th class="px-1.5 py-2.5 text-left w-[13%]">Nama Akun</th>
+                                <th class="px-1.5 py-2.5 text-left w-[19%]">Nama Barang / Item</th>
+                                <th class="px-1.5 py-2.5 text-right w-[12%]">Harga Satuan</th>
+                                <th class="px-1 py-2.5 text-center w-[6%]">Jumlah</th>
+                                <th class="px-1 py-2.5 text-center w-[8%]">Satuan</th>
+                                <th class="px-1 py-2.5 text-center w-[6%]">Durasi</th>
+                                <th class="px-1 py-2.5 text-center w-[9%]">Sat. Durasi</th>
+                                <th class="px-1.5 py-2.5 text-right w-[12%]">Total (Rp)</th>
+                                <th class="px-1.5 py-2.5 text-left w-[10%]">Catatan</th>
+                                <th class="px-1 py-2.5 text-center w-8">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100 bg-white">
                             <template x-for="(item, index) in items" :key="index">
                                 <tr class="hover:bg-indigo-50/30 transition">
                                     <!-- No -->
-                                    <td class="px-3 py-2.5 text-center font-bold text-gray-500" x-text="index + 1"></td>
+                                    <td class="px-1.5 py-2 text-center font-bold text-gray-500" x-text="index + 1"></td>
 
                                     <!-- Nama Akun -->
-                                    <td class="px-3 py-2.5">
+                                    <td class="px-1.5 py-2">
                                         <input type="text" :name="'items[' + index + '][nama_akun]'" x-model="item.nama_akun" required
-                                               placeholder="Misal: Perlengkapan / Konsumsi"
-                                               class="w-full rounded-lg border-gray-300 text-xs focus:ring-indigo-500 focus:border-indigo-500 p-1.5">
+                                               placeholder="Misal: Konsumsi"
+                                               class="w-full rounded-md border-gray-300 text-xs focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 p-1.5">
                                     </td>
 
                                     <!-- Nama Barang -->
-                                    <td class="px-3 py-2.5">
+                                    <td class="px-1.5 py-2">
                                         <input type="text" :name="'items[' + index + '][nama_barang]'" x-model="item.nama_barang" required
-                                               placeholder="Misal: Banner 4x2 meter"
-                                               class="w-full rounded-lg border-gray-300 text-xs focus:ring-indigo-500 focus:border-indigo-500 p-1.5">
+                                               placeholder="Misal: Snack box"
+                                               class="w-full rounded-md border-gray-300 text-xs focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 p-1.5">
                                     </td>
 
                                     <!-- Harga Satuan -->
-                                    <td class="px-3 py-2.5">
+                                    <td class="px-1.5 py-2">
                                         <input type="number" min="0" step="1000" :name="'items[' + index + '][harga_satuan]'" x-model.number="item.harga_satuan" required
                                                placeholder="0"
-                                               class="w-full rounded-lg border-gray-300 text-xs text-right focus:ring-indigo-500 focus:border-indigo-500 p-1.5 font-mono">
+                                               class="w-full rounded-md border-gray-300 text-xs text-right focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 p-1.5 font-mono">
                                     </td>
 
                                     <!-- Jumlah -->
-                                    <td class="px-3 py-2.5">
+                                    <td class="px-1 py-2">
                                         <input type="number" min="1" step="1" :name="'items[' + index + '][jumlah]'" x-model.number="item.jumlah" required
-                                               class="w-full rounded-lg border-gray-300 text-xs text-center focus:ring-indigo-500 focus:border-indigo-500 p-1.5 font-mono">
+                                               class="w-full rounded-md border-gray-300 text-xs text-center focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 p-1.5 font-mono">
                                     </td>
 
-                                    <!-- Total (Calculated) -->
-                                    <td class="px-3 py-2.5 text-right font-bold text-indigo-700 font-mono whitespace-nowrap"
-                                        x-text="formatRupiah((item.harga_satuan || 0) * (item.jumlah || 0))">
+                                    <!-- Satuan (untuk Jumlah, keterangan) -->
+                                    <td class="px-1 py-2">
+                                        <select :name="'items[' + index + '][satuan]'" x-model="item.satuan" required
+                                                class="w-full rounded-md border-gray-300 text-xs focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 p-1.5 bg-white font-medium">
+                                            @foreach($satuans as $satuan)
+                                                <option value="{{ $satuan->nama_satuan }}">{{ $satuan->nama_satuan }}</option>
+                                            @endforeach
+                                        </select>
                                     </td>
 
-                                    <!-- Keterangan (Non-editable checklist untuk mahasiswa) -->
-                                    <td class="px-3 py-2.5 text-center">
-                                        <div class="inline-flex flex-col gap-1 p-1 bg-gray-50 border border-gray-200 rounded-lg text-[10px] text-gray-500">
-                                            <div class="flex items-center gap-2 justify-center">
-                                                <label class="inline-flex items-center opacity-60 cursor-not-allowed">
-                                                    <input type="checkbox" disabled class="rounded text-emerald-600 focus:ring-0 w-3.5 h-3.5">
-                                                    <span class="ms-1 text-emerald-800 font-medium">Disetujui</span>
-                                                </label>
-                                                <label class="inline-flex items-center opacity-60 cursor-not-allowed">
-                                                    <input type="checkbox" disabled class="rounded text-rose-600 focus:ring-0 w-3.5 h-3.5">
-                                                    <span class="ms-1 text-rose-800 font-medium">Tdk Disetujui</span>
-                                                </label>
-                                            </div>
-                                            <span class="text-[9px] text-amber-600 font-medium">Khusus Role Kemahasiswaan</span>
-                                        </div>
+                                    <!-- Durasi -->
+                                    <td class="px-1 py-2">
+                                        <input type="number" min="0.1" step="any" placeholder="1" :name="'items[' + index + '][durasi]'" x-model.number="item.durasi" required
+                                               class="w-full rounded-md border-gray-300 text-xs text-center focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 p-1.5 font-mono">
+                                    </td>
+
+                                    <!-- Satuan Durasi (sebelum Total) -->
+                                    <td class="px-1 py-2">
+                                        <select :name="'items[' + index + '][satuan_durasi]'" x-model="item.satuan_durasi" required
+                                                class="w-full rounded-md border-gray-300 text-xs focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 p-1.5 bg-white font-medium">
+                                            @foreach($satuans as $satuan)
+                                                <option value="{{ $satuan->nama_satuan }}">{{ $satuan->nama_satuan }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+
+                                    <!-- Total (Calculated: Jumlah * Harga Satuan * Durasi) -->
+                                    <td class="px-1.5 py-2 text-right font-bold text-indigo-700 font-mono whitespace-nowrap text-xs"
+                                        x-text="formatRupiah((item.harga_satuan || 0) * (item.jumlah || 0) * (item.durasi || 1))">
                                     </td>
 
                                     <!-- Catatan -->
-                                    <td class="px-3 py-2.5">
+                                    <td class="px-1.5 py-2">
                                         <input type="text" :name="'items[' + index + '][catatan]'" x-model="item.catatan"
-                                               placeholder="Catatan tambahan / rincian spek"
-                                               class="w-full rounded-lg border-gray-300 text-xs focus:ring-indigo-500 focus:border-indigo-500 p-1.5">
+                                               placeholder="Rincian / spek"
+                                               class="w-full rounded-md border-gray-300 text-xs focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 p-1.5">
                                     </td>
 
                                     <!-- Tombol Hapus -->
-                                    <td class="px-3 py-2.5 text-center">
+                                    <td class="px-1 py-2 text-center">
                                         <button type="button" @click="removeRow(index)" :disabled="items.length <= 1"
                                                 :class="items.length <= 1 ? 'opacity-30 cursor-not-allowed text-gray-400' : 'hover:bg-rose-50 text-rose-600 hover:text-rose-800'"
                                                 class="p-1 rounded-md transition" title="Hapus baris ini">
@@ -220,12 +247,12 @@
                         </tbody>
                         <tfoot class="bg-slate-50 font-bold text-xs text-gray-800 border-t-2 border-gray-200">
                             <tr>
-                                <td colspan="5" class="px-4 py-3 text-right uppercase tracking-wider text-gray-600">
+                                <td colspan="8" class="px-3 py-2.5 text-right uppercase tracking-wider text-gray-600 text-[11px]">
                                     Total Anggaran Pengajuan (RAB):
                                 </td>
-                                <td class="px-3 py-3 text-right text-base text-indigo-700 font-extrabold font-mono" x-text="formatRupiah(grandTotal())"></td>
-                                <td colspan="3" class="px-3 py-3 text-xs text-gray-500 italic">
-                                    <span x-text="items.length"></span> baris item rincian
+                                <td class="px-2 py-2.5 text-right text-xs sm:text-sm text-indigo-700 font-extrabold font-mono whitespace-nowrap" x-text="formatRupiah(grandTotal())"></td>
+                                <td colspan="2" class="px-2 py-2.5 text-xs text-gray-500 italic">
+                                    <span x-text="items.length"></span> baris item
                                 </td>
                             </tr>
                         </tfoot>
@@ -263,6 +290,9 @@
                         nama_barang: '',
                         harga_satuan: 0,
                         jumlah: 1,
+                        satuan: '{{ $satuans->first()->nama_satuan ?? "Buah" }}',
+                        durasi: 1,
+                        satuan_durasi: '{{ $satuans->where("nama_satuan", "Hari")->first()->nama_satuan ?? ($satuans->first()->nama_satuan ?? "Hari") }}',
                         catatan: ''
                     }
                 ],
@@ -279,6 +309,9 @@
                         nama_barang: '',
                         harga_satuan: 0,
                         jumlah: 1,
+                        satuan: '{{ $satuans->first()->nama_satuan ?? "Buah" }}',
+                        durasi: 1,
+                        satuan_durasi: '{{ $satuans->where("nama_satuan", "Hari")->first()->nama_satuan ?? ($satuans->first()->nama_satuan ?? "Hari") }}',
                         catatan: ''
                     });
                 },
@@ -289,7 +322,7 @@
                 },
                 grandTotal() {
                     return this.items.reduce((sum, item) => {
-                        return sum + ((Number(item.harga_satuan) || 0) * (Number(item.jumlah) || 0));
+                        return sum + ((Number(item.harga_satuan) || 0) * (Number(item.jumlah) || 0) * (Number(item.durasi) || 1));
                     }, 0);
                 },
                 formatRupiah(number) {
@@ -302,8 +335,18 @@
                         return;
                     }
                     for (let i = 0; i < this.items.length; i++) {
-                        if (!this.items[i].nama_akun || !this.items[i].nama_barang) {
-                            alert('Harap lengkapi Nama Akun dan Nama Barang pada baris ke-' + (i + 1));
+                        if (!this.items[i].nama_akun || !this.items[i].nama_barang || !this.items[i].satuan || !this.items[i].satuan_durasi) {
+                            alert('Harap lengkapi Nama Akun, Nama Barang, Satuan, dan Satuan Durasi pada baris ke-' + (i + 1));
+                            e.preventDefault();
+                            return;
+                        }
+                        if (!this.items[i].jumlah || Number(this.items[i].jumlah) <= 0) {
+                            alert('Harap isi Jumlah minimal 1 pada baris ke-' + (i + 1));
+                            e.preventDefault();
+                            return;
+                        }
+                        if (!this.items[i].durasi || Number(this.items[i].durasi) <= 0) {
+                            alert('Harap isi Durasi minimal 1 pada baris ke-' + (i + 1));
                             e.preventDefault();
                             return;
                         }

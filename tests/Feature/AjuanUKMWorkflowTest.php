@@ -44,6 +44,7 @@ class AjuanUKMWorkflowTest extends TestCase
         $postData = [
             'nama_kegiatan' => 'RoboFest Championship 2026',
             'tanggal_kegiatan' => now()->addDays(20)->toDateString(),
+            'jenis_kegiatan' => 'Lomba',
             'dokumen_kegiatan' => $file,
             'items' => [
                 [
@@ -51,6 +52,9 @@ class AjuanUKMWorkflowTest extends TestCase
                     'nama_barang' => 'Arena Lintasan Line Follower',
                     'harga_satuan' => 1200000,
                     'jumlah' => 2,
+                    'satuan' => 'Unit',
+                    'durasi' => 1,
+                    'satuan_durasi' => 'Hari',
                     'catatan' => 'Sesuai regulasi nasional',
                 ],
                 [
@@ -58,7 +62,10 @@ class AjuanUKMWorkflowTest extends TestCase
                     'nama_barang' => 'Makan Siang Peserta',
                     'harga_satuan' => 30000,
                     'jumlah' => 40,
-                    'catatan' => '40 pax',
+                    'satuan' => 'Dus',
+                    'durasi' => 2, // 2 hari pelaksanaan
+                    'satuan_durasi' => 'Hari',
+                    'catatan' => '40 pax x 2 hari',
                 ],
             ],
         ];
@@ -70,15 +77,24 @@ class AjuanUKMWorkflowTest extends TestCase
         $this->assertDatabaseHas('ajuan_kegiatans', [
             'nama_kegiatan' => 'RoboFest Championship 2026',
             'ukm_id' => $mahasiswa->ukm_id,
+            'jenis_kegiatan' => 'Lomba',
             'status_pembina' => 'belum_disetujui',
             'status_kemahasiswaan' => 'belum_disetujui',
             'status_akhir' => 'menunggu_pembina',
-            'total_anggaran' => 3600000, // (1200000*2) + (30000*40) = 2400000 + 1200000 = 3600000
+            'total_anggaran' => 4800000, // (1200000*2*1) + (30000*40*2) = 2400000 + 2400000 = 4800000
         ]);
 
         $ajuan = AjuanKegiatan::where('nama_kegiatan', 'RoboFest Championship 2026')->first();
         $this->assertCount(2, $ajuan->details);
         $this->assertEquals('Arena Lintasan Line Follower', $ajuan->details[0]->nama_barang);
+        $this->assertEquals(1, $ajuan->details[0]->durasi);
+        $this->assertEquals('Unit', $ajuan->details[0]->satuan);
+        $this->assertEquals('Hari', $ajuan->details[0]->satuan_durasi);
+        $this->assertEquals(2, $ajuan->details[1]->durasi);
+        $this->assertEquals('Dus', $ajuan->details[1]->satuan);
+        $this->assertEquals('Hari', $ajuan->details[1]->satuan_durasi);
+        $this->assertEquals(2400000, $ajuan->details[0]->total);
+        $this->assertEquals(2400000, $ajuan->details[1]->total);
         $this->assertEquals('belum_diverifikasi', $ajuan->details[0]->status_keterangan);
     }
 
@@ -199,12 +215,16 @@ class AjuanUKMWorkflowTest extends TestCase
         $updateResponse = $this->actingAs($mahasiswa)->put(route('mahasiswa.update', $ajuan->id), [
             'nama_kegiatan' => 'Workshop IoT dan Robotika Kampus 2026 (Revisi)',
             'tanggal_kegiatan' => now()->addDays(15)->toDateString(),
+            'jenis_kegiatan' => 'Pelatihan',
             'items' => [
                 [
                     'nama_akun' => 'Perlengkapan',
                     'nama_barang' => 'Modul ESP32 & Sensor Kit IoT',
                     'harga_satuan' => 150000,
                     'jumlah' => 8, // dikurangi dari 10 ke 8
+                    'satuan' => 'Paket',
+                    'durasi' => 1,
+                    'satuan_durasi' => 'Keg',
                     'catatan' => 'Disesuaikan dengan pagu',
                 ],
                 [
@@ -212,6 +232,9 @@ class AjuanUKMWorkflowTest extends TestCase
                     'nama_barang' => 'Snack & Makan Siang Peserta',
                     'harga_satuan' => 30000,
                     'jumlah' => 35, // dikurangi dari 50 ke 35
+                    'satuan' => 'Dus',
+                    'durasi' => 1,
+                    'satuan_durasi' => 'Hari',
                     'catatan' => '35 pax',
                 ],
             ],
@@ -223,7 +246,7 @@ class AjuanUKMWorkflowTest extends TestCase
         $this->assertEquals('belum_disetujui', $ajuan->status_pembina);
         $this->assertEquals('menunggu_pembina', $ajuan->status_akhir);
         $this->assertEquals(1, $ajuan->revisi_count);
-        $this->assertEquals(2250000, $ajuan->total_anggaran); // (150000*8) + (30000*35) = 1200000 + 1050000 = 2250000
+        $this->assertEquals(2250000, $ajuan->total_anggaran); // (150000*8*1) + (30000*35*1) = 1200000 + 1050000 = 2250000
     }
 
     /**
@@ -250,12 +273,16 @@ class AjuanUKMWorkflowTest extends TestCase
         $updateResponse = $this->actingAs($mahasiswaMusik)->put(route('mahasiswa.update', $ajuan->id), [
             'nama_kegiatan' => $ajuan->nama_kegiatan,
             'tanggal_kegiatan' => $ajuan->tanggal_kegiatan->toDateString(),
+            'jenis_kegiatan' => 'Lomba',
             'items' => [
                 [
                     'nama_akun' => 'Sewa Peralatan',
                     'nama_barang' => 'Sewa Sound System Paket B (Hemat)',
                     'harga_satuan' => 2000000,
                     'jumlah' => 1,
+                    'satuan' => 'Paket',
+                    'durasi' => 1,
+                    'satuan_durasi' => 'Hari',
                     'catatan' => 'Sudah dinegosiasi ulang',
                 ],
             ],
@@ -357,12 +384,16 @@ class AjuanUKMWorkflowTest extends TestCase
         $resubmitResponse = $this->actingAs($mahasiswaMusik)->put(route('mahasiswa.update', $ajuan->id), [
             'nama_kegiatan' => $ajuan->nama_kegiatan,
             'tanggal_kegiatan' => $ajuan->tanggal_kegiatan->toDateString(),
+            'jenis_kegiatan' => 'Lomba',
             'items' => [
                 [
                     'nama_akun' => 'Sewa Peralatan',
                     'nama_barang' => 'Sewa Sound System Hemat Diskon',
                     'harga_satuan' => 1500000,
                     'jumlah' => 1,
+                    'satuan' => 'Paket',
+                    'durasi' => 1,
+                    'satuan_durasi' => 'Hari',
                     'catatan' => 'Harga telah diturunkan',
                 ],
             ],
@@ -586,4 +617,362 @@ class AjuanUKMWorkflowTest extends TestCase
         $this->actingAs($pembina)->get(route('kemahasiswaan.ukm.index'))->assertStatus(403);
         $this->actingAs($pembina)->get(route('kemahasiswaan.users.index'))->assertStatus(403);
     }
+
+    /**
+     * Test 15: Kemahasiswaan navigation renders Setting dropdown with Master and User Management submenus.
+     */
+    public function test_kemahasiswaan_navigation_has_setting_dropdown_with_submenus(): void
+    {
+        $kemahasiswaan = User::where('email', 'kemahasiswaan@univ.ac.id')->firstOrFail();
+        $mahasiswa = User::where('email', 'mahasiswa.robotika@univ.ac.id')->firstOrFail();
+
+        // 1. Kemahasiswaan can see Setting dropdown and its submenus
+        $response = $this->actingAs($kemahasiswaan)->get(route('kemahasiswaan.dashboard'));
+        $response->assertStatus(200);
+        $response->assertSee('Setting');
+        $response->assertSee('Master Data');
+        $response->assertSee('Master UKM');
+        $response->assertSee('Master Satuan (RAB)');
+        $response->assertSee('User Management');
+
+        // 2. Mahasiswa does not have the Setting dropdown for master management
+        $mhsResponse = $this->actingAs($mahasiswa)->get(route('mahasiswa.dashboard'));
+        $mhsResponse->assertStatus(200);
+        $mhsResponse->assertDontSee('Master Data UKM');
+    }
+
+    /**
+     * Test 16: Mahasiswa can edit proposal details and RAB items before approval (menunggu_pembina or menunggu_kemahasiswaan).
+     */
+    public function test_mahasiswa_can_edit_proposal_and_details_before_approval(): void
+    {
+        Storage::fake('public');
+        $mahasiswa = User::where('email', 'mahasiswa.robotika@univ.ac.id')->firstOrFail();
+        $file = UploadedFile::fake()->create('proposal_awal.pdf', 200, 'application/pdf');
+
+        // Create initial proposal in 'menunggu_pembina' status
+        $this->actingAs($mahasiswa)->post(route('mahasiswa.store'), [
+            'nama_kegiatan' => 'Workshop IoT Awal',
+            'tanggal_kegiatan' => now()->addDays(15)->toDateString(),
+            'jenis_kegiatan' => 'Pelatihan',
+            'dokumen_kegiatan' => $file,
+            'items' => [
+                [
+                    'nama_akun' => 'Perlengkapan',
+                    'nama_barang' => 'ESP32 Development Board',
+                    'harga_satuan' => 75000,
+                    'jumlah' => 10,
+                    'satuan' => 'Unit',
+                    'durasi' => 1,
+                    'satuan_durasi' => 'Hari',
+                    'catatan' => 'Item awal',
+                ],
+            ],
+        ]);
+
+        $ajuan = AjuanKegiatan::where('nama_kegiatan', 'Workshop IoT Awal')->firstOrFail();
+        $this->assertEquals('menunggu_pembina', $ajuan->status_akhir);
+        $this->assertTrue($ajuan->isBisaDieditMahasiswa());
+
+        // 1. Edit page accessible while menunggu_pembina
+        $editPage = $this->actingAs($mahasiswa)->get(route('mahasiswa.edit', $ajuan->id));
+        $editPage->assertStatus(200);
+        $editPage->assertSee('Mode Edit Usulan Kegiatan');
+        $editPage->assertSee('Simpan Perubahan Usulan');
+
+        // 2. Update proposal and detail items
+        $updateResponse = $this->actingAs($mahasiswa)->put(route('mahasiswa.update', $ajuan->id), [
+            'nama_kegiatan' => 'Workshop IoT Lanjutan 2026',
+            'tanggal_kegiatan' => now()->addDays(18)->toDateString(),
+            'jenis_kegiatan' => 'Pelatihan',
+            'items' => [
+                [
+                    'nama_akun' => 'Perlengkapan',
+                    'nama_barang' => 'ESP32 NodeMCU V3',
+                    'harga_satuan' => 85000,
+                    'jumlah' => 15,
+                    'satuan' => 'Unit',
+                    'durasi' => 2,
+                    'satuan_durasi' => 'Hari',
+                    'catatan' => 'Revisi spesifikasi board',
+                ],
+                [
+                    'nama_akun' => 'Konsumsi',
+                    'nama_barang' => 'Snack Box',
+                    'harga_satuan' => 15000,
+                    'jumlah' => 20,
+                    'satuan' => 'Porsi',
+                    'durasi' => 2,
+                    'satuan_durasi' => 'Hari',
+                    'catatan' => 'Snack 2 hari',
+                ],
+            ],
+        ]);
+
+        $updateResponse->assertRedirect(route('mahasiswa.show', $ajuan->id));
+        $updateResponse->assertSessionHas('success');
+
+        $ajuan->refresh();
+        $this->assertEquals('Workshop IoT Lanjutan 2026', $ajuan->nama_kegiatan);
+        $this->assertEquals('menunggu_pembina', $ajuan->status_akhir);
+        // Total anggaran: (85000 * 15 * 2) + (15000 * 20 * 2) = 2550000 + 600000 = 3150000
+        $this->assertEquals(3150000, $ajuan->total_anggaran);
+        $this->assertCount(2, $ajuan->details);
+        $this->assertEquals('ESP32 NodeMCU V3', $ajuan->details[0]->nama_barang);
+        $this->assertEquals(2550000, $ajuan->details[0]->total);
+        $this->assertEquals('Snack Box', $ajuan->details[1]->nama_barang);
+        $this->assertEquals(600000, $ajuan->details[1]->total);
+
+        // 3. Move to 'menunggu_kemahasiswaan' (Pembina approves)
+        $pembina = User::where('email', 'pembina.robotika@univ.ac.id')->firstOrFail();
+        $this->actingAs($pembina)->post(route('pembina.verify', $ajuan->id), [
+            'status' => 'disetujui',
+            'catatan' => 'Disetujui pembina',
+        ]);
+
+        $ajuan->refresh();
+        $this->assertEquals('menunggu_kemahasiswaan', $ajuan->status_akhir);
+        $this->assertTrue($ajuan->isBisaDieditMahasiswa());
+
+        // 4. Mahasiswa can still edit while waiting for Kemahasiswaan
+        $editPage2 = $this->actingAs($mahasiswa)->get(route('mahasiswa.edit', $ajuan->id));
+        $editPage2->assertStatus(200);
+
+        $updateResponse2 = $this->actingAs($mahasiswa)->put(route('mahasiswa.update', $ajuan->id), [
+            'nama_kegiatan' => 'Workshop IoT Lanjutan 2026 Final Update',
+            'tanggal_kegiatan' => now()->addDays(19)->toDateString(),
+            'jenis_kegiatan' => 'Pelatihan',
+            'items' => [
+                [
+                    'nama_akun' => 'Perlengkapan',
+                    'nama_barang' => 'ESP32 NodeMCU V3 Pro',
+                    'harga_satuan' => 90000,
+                    'jumlah' => 15,
+                    'satuan' => 'Unit',
+                    'durasi' => 1,
+                    'satuan_durasi' => 'Hari',
+                    'catatan' => 'Penyesuaian 1 hari',
+                ],
+            ],
+        ]);
+        $updateResponse2->assertRedirect(route('mahasiswa.show', $ajuan->id));
+
+        $ajuan->refresh();
+        $this->assertEquals('Workshop IoT Lanjutan 2026 Final Update', $ajuan->nama_kegiatan);
+        $this->assertEquals('menunggu_kemahasiswaan', $ajuan->status_akhir);
+        $this->assertEquals(1350000, $ajuan->total_anggaran);
+        $this->assertCount(1, $ajuan->details);
+    }
+
+    /**
+     * Test 17: Mahasiswa cannot edit once ajuan is officially approved by Kemahasiswaan.
+     */
+    public function test_mahasiswa_cannot_edit_once_approved(): void
+    {
+        $mahasiswa = User::where('email', 'mahasiswa.robotika@univ.ac.id')->firstOrFail();
+        $kemahasiswaan = User::where('email', 'kemahasiswaan@univ.ac.id')->firstOrFail();
+
+        $ajuan = AjuanKegiatan::create([
+            'user_id' => $mahasiswa->id,
+            'ukm_id' => $mahasiswa->ukm_id,
+            'nama_kegiatan' => 'Kegiatan Sudah Disetujui',
+            'tanggal_kegiatan' => now()->addDays(10)->toDateString(),
+            'jenis_kegiatan' => 'Lomba',
+            'dokumen_proposal' => 'test.pdf',
+            'dokumen_nama_asli' => 'test.pdf',
+            'total_anggaran' => 100000,
+            'status_pembina' => 'disetujui',
+            'status_kemahasiswaan' => 'disetujui',
+            'status_akhir' => 'disetujui',
+        ]);
+
+        $this->assertFalse($ajuan->isBisaDieditMahasiswa());
+
+        // Attempting to visit edit page should redirect with error
+        $response = $this->actingAs($mahasiswa)->get(route('mahasiswa.edit', $ajuan->id));
+        $response->assertRedirect(route('mahasiswa.show', $ajuan->id));
+        $response->assertSessionHas('error');
+
+        // Attempting to PUT update should redirect with error
+        $putResponse = $this->actingAs($mahasiswa)->put(route('mahasiswa.update', $ajuan->id), [
+            'nama_kegiatan' => 'Coba Ubah Yang Sudah Disetujui',
+            'tanggal_kegiatan' => now()->addDays(10)->toDateString(),
+            'jenis_kegiatan' => 'Lomba',
+            'items' => [
+                [
+                    'nama_akun' => 'Test',
+                    'nama_barang' => 'Test',
+                    'harga_satuan' => 1000,
+                    'jumlah' => 1,
+                    'satuan' => 'Unit',
+                    'durasi' => 1,
+                    'satuan_durasi' => 'Hari',
+                ],
+            ],
+        ]);
+        $putResponse->assertRedirect(route('mahasiswa.show', $ajuan->id));
+        $putResponse->assertSessionHas('error');
+    }
+
+    /**
+     * Test 18: Mahasiswa create and edit views have Jenis Kegiatan dropdown with Lomba, Pelatihan, Lainnya.
+     */
+    public function test_mahasiswa_create_and_edit_views_have_jenis_kegiatan_dropdown(): void
+    {
+        $mahasiswa = User::where('email', 'mahasiswa.robotika@univ.ac.id')->firstOrFail();
+
+        // 1. Check create view
+        $createResponse = $this->actingAs($mahasiswa)->get(route('mahasiswa.create'));
+        $createResponse->assertStatus(200);
+        $createResponse->assertSee('Jenis Kegiatan');
+        $createResponse->assertSee('Lomba');
+        $createResponse->assertSee('Pelatihan');
+        $createResponse->assertSee('Lainnya');
+
+        // 2. Check edit view
+        $ajuan = AjuanKegiatan::where('ukm_id', $mahasiswa->ukm_id)->firstOrFail();
+        $editResponse = $this->actingAs($mahasiswa)->get(route('mahasiswa.edit', $ajuan->id));
+        $editResponse->assertStatus(200);
+        $editResponse->assertSee('Jenis Kegiatan');
+        $editResponse->assertSee('Lomba');
+        $editResponse->assertSee('Pelatihan');
+        $editResponse->assertSee('Lainnya');
+    }
+
+    /**
+     * Test 19: Jenis Kegiatan validation requires valid option (Lomba, Pelatihan, Lainnya).
+     */
+    public function test_jenis_kegiatan_validation(): void
+    {
+        Storage::fake('public');
+        $mahasiswa = User::where('email', 'mahasiswa.robotika@univ.ac.id')->firstOrFail();
+        $file = UploadedFile::fake()->create('test.pdf', 100, 'application/pdf');
+
+        // Missing jenis_kegiatan
+        $res1 = $this->actingAs($mahasiswa)->post(route('mahasiswa.store'), [
+            'nama_kegiatan' => 'Kegiatan Tanpa Jenis',
+            'tanggal_kegiatan' => now()->addDays(5)->toDateString(),
+            'dokumen_kegiatan' => $file,
+            'items' => [
+                [
+                    'nama_akun' => 'Test',
+                    'nama_barang' => 'Test',
+                    'harga_satuan' => 1000,
+                    'jumlah' => 1,
+                    'satuan' => 'Unit',
+                    'durasi' => 1,
+                    'satuan_durasi' => 'Hari',
+                ],
+            ],
+        ]);
+        $res1->assertSessionHasErrors('jenis_kegiatan');
+
+        // Invalid jenis_kegiatan
+        $res2 = $this->actingAs($mahasiswa)->post(route('mahasiswa.store'), [
+            'nama_kegiatan' => 'Kegiatan Jenis Salah',
+            'tanggal_kegiatan' => now()->addDays(5)->toDateString(),
+            'jenis_kegiatan' => 'KonserMusik', // Invalid
+            'dokumen_kegiatan' => $file,
+            'items' => [
+                [
+                    'nama_akun' => 'Test',
+                    'nama_barang' => 'Test',
+                    'harga_satuan' => 1000,
+                    'jumlah' => 1,
+                    'satuan' => 'Unit',
+                    'durasi' => 1,
+                    'satuan_durasi' => 'Hari',
+                ],
+            ],
+        ]);
+        $res2->assertSessionHasErrors('jenis_kegiatan');
+    }
+
+    /**
+     * Test 20: Kemahasiswaan can edit RAB detail items, add new items, and recalculate total_anggaran.
+     */
+    public function test_kemahasiswaan_can_edit_rab_detail_items_and_recalculate_total(): void
+    {
+        $kemahasiswaan = User::where('email', 'kemahasiswaan@univ.ac.id')->firstOrFail();
+        $ajuan = AjuanKegiatan::with('details')->firstOrFail();
+
+        // 1. Visit Kemahasiswaan show page (e.g. https://ukmkeg.com/kemahasiswaan/pengajuan/{id})
+        $response = $this->actingAs($kemahasiswaan)->get(route('kemahasiswaan.show', $ajuan->id));
+        $response->assertStatus(200);
+        $response->assertSee('Aktifkan Edit Tabel RAB');
+
+        $firstDetail = $ajuan->details->first();
+
+        // 2. Submit edited RAB items: update the first item, add a brand new item, and leave out others (if any) to test deletion
+        $postData = [
+            'items' => [
+                [
+                    'id' => $firstDetail->id,
+                    'nama_akun' => 'Honorarium Diperbarui',
+                    'nama_barang' => 'Honorarium Juri Nasional',
+                    'harga_satuan' => 1500000,
+                    'jumlah' => 2,
+                    'satuan' => 'Orang',
+                    'durasi' => 2,
+                    'satuan_durasi' => 'Hari',
+                    'status_keterangan' => 'disetujui',
+                    'catatan' => 'Disesuaikan dengan SBM kemahasiswaan terbaru',
+                ],
+                [
+                    'id' => null, // new row
+                    'nama_akun' => 'Perlengkapan',
+                    'nama_barang' => 'Sewa Sound System & Lighting Tambahan',
+                    'harga_satuan' => 2000000,
+                    'jumlah' => 1,
+                    'satuan' => 'Paket',
+                    'durasi' => 1,
+                    'satuan_durasi' => 'Hari',
+                    'status_keterangan' => 'disetujui',
+                    'catatan' => 'Disetujui untuk mendukung panggung utama',
+                ],
+            ],
+        ];
+
+        $updateResponse = $this->actingAs($kemahasiswaan)->post(
+            route('kemahasiswaan.update-details', $ajuan->id),
+            $postData
+        );
+
+        $updateResponse->assertRedirect(route('kemahasiswaan.show', $ajuan->id));
+        $updateResponse->assertSessionHas('success');
+
+        // 3. Verify DB changes
+        $ajuan->refresh();
+        // Item 1: 1.500.000 * 2 * 2 = 6.000.000
+        // Item 2: 2.000.000 * 1 * 1 = 2.000.000
+        // Total = 8.000.000
+        $this->assertEquals(8000000, (float)$ajuan->total_anggaran);
+        $this->assertCount(2, $ajuan->details);
+
+        $this->assertDatabaseHas('detail_kegiatans', [
+            'id' => $firstDetail->id,
+            'ajuan_kegiatan_id' => $ajuan->id,
+            'nama_akun' => 'Honorarium Diperbarui',
+            'nama_barang' => 'Honorarium Juri Nasional',
+            'harga_satuan' => 1500000,
+            'jumlah' => 2,
+            'durasi' => 2,
+            'total' => 6000000,
+            'status_keterangan' => 'disetujui',
+            'catatan' => 'Disesuaikan dengan SBM kemahasiswaan terbaru',
+        ]);
+
+        $this->assertDatabaseHas('detail_kegiatans', [
+            'ajuan_kegiatan_id' => $ajuan->id,
+            'nama_akun' => 'Perlengkapan',
+            'nama_barang' => 'Sewa Sound System & Lighting Tambahan',
+            'harga_satuan' => 2000000,
+            'jumlah' => 1,
+            'durasi' => 1,
+            'total' => 2000000,
+            'status_keterangan' => 'disetujui',
+        ]);
+    }
 }
+
+

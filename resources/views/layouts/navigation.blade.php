@@ -43,14 +43,63 @@
                             <svg class="w-4 h-4 me-1.5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
                             Laporan & Statistik
                         </x-nav-link>
-                        <x-nav-link :href="route('kemahasiswaan.ukm.index')" :active="request()->routeIs('kemahasiswaan.ukm.*')">
-                            <svg class="w-4 h-4 me-1.5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                            Master UKM
-                        </x-nav-link>
-                        <x-nav-link :href="route('kemahasiswaan.users.index')" :active="request()->routeIs('kemahasiswaan.users.*')">
-                            <svg class="w-4 h-4 me-1.5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                            Data Pengguna
-                        </x-nav-link>
+
+                        <!-- Menu Setting (Dropdown Master & User Management) -->
+                        <div class="inline-flex items-center">
+                            <x-dropdown align="left" width="64">
+                                <x-slot name="trigger">
+                                    <button type="button" class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('kemahasiswaan.ukm.*', 'kemahasiswaan.satuan.*', 'kemahasiswaan.users.*') ? 'border-indigo-500 text-gray-900 font-semibold' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} text-sm font-medium leading-5 transition duration-150 ease-in-out h-16 focus:outline-none cursor-pointer">
+                                        <svg class="w-4 h-4 me-1.5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                        <span>Setting</span>
+                                        <svg class="ms-1.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                    </button>
+                                </x-slot>
+
+                                <x-slot name="content">
+                                    <!-- Header Group 1: Master Data -->
+                                    <div class="px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400 bg-gray-50 border-b border-gray-100">
+                                        Master Data
+                                    </div>
+                                    <x-dropdown-link :href="route('kemahasiswaan.ukm.index')" class="flex items-center gap-2.5 py-2.5 {{ request()->routeIs('kemahasiswaan.ukm.*') ? 'bg-indigo-50 text-indigo-700 font-semibold' : '' }}">
+                                        <div class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center shrink-0">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                        </div>
+                                        <div>
+                                            <div class="text-xs font-bold text-gray-800">Master UKM</div>
+                                            <div class="text-[11px] text-gray-400 font-normal">Daftar Unit Kegiatan Mahasiswa</div>
+                                        </div>
+                                    </x-dropdown-link>
+                                    <x-dropdown-link :href="route('kemahasiswaan.satuan.index')" class="flex items-center gap-2.5 py-2.5 {{ request()->routeIs('kemahasiswaan.satuan.*') ? 'bg-indigo-50 text-indigo-700 font-semibold' : '' }}">
+                                        <div class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+                                        </div>
+                                        <div>
+                                            <div class="text-xs font-bold text-gray-800">Master Satuan (RAB)</div>
+                                            <div class="text-[11px] text-gray-400 font-normal">Pilihan Satuan Kebutuhan Anggaran</div>
+                                        </div>
+                                    </x-dropdown-link>
+
+                                    <!-- Header Group 2: User Management -->
+                                    <div class="px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400 bg-gray-50 border-t border-b border-gray-100">
+                                        User Management
+                                    </div>
+                                    <x-dropdown-link :href="route('kemahasiswaan.users.index')" class="flex items-center gap-2.5 py-2.5 {{ request()->routeIs('kemahasiswaan.users.*') ? 'bg-indigo-50 text-indigo-700 font-semibold' : '' }}">
+                                        <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                                        </div>
+                                        <div>
+                                            <div class="text-xs font-bold text-gray-800">User Management</div>
+                                            <div class="text-[11px] text-gray-400 font-normal">Data Pengguna & Hak Akses Akun</div>
+                                        </div>
+                                    </x-dropdown-link>
+                                </x-slot>
+                            </x-dropdown>
+                        </div>
                     @endif
                 </div>
             </div>
@@ -147,12 +196,25 @@
                 <x-responsive-nav-link :href="route('kemahasiswaan.laporan')" :active="request()->routeIs('kemahasiswaan.laporan*')">
                     Laporan & Statistik UKM
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('kemahasiswaan.ukm.index')" :active="request()->routeIs('kemahasiswaan.ukm.*')">
-                    Master Data UKM
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('kemahasiswaan.users.index')" :active="request()->routeIs('kemahasiswaan.users.*')">
-                    Manajemen Pengguna
-                </x-responsive-nav-link>
+
+                <!-- Group Setting (Master & User Management) -->
+                <div class="pt-2 pb-1 border-t border-gray-100 mt-2">
+                    <div class="px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        <span>Setting</span>
+                    </div>
+                    <div class="ps-2">
+                        <x-responsive-nav-link :href="route('kemahasiswaan.ukm.index')" :active="request()->routeIs('kemahasiswaan.ukm.*')">
+                            • Master Data UKM
+                        </x-responsive-nav-link>
+                        <x-responsive-nav-link :href="route('kemahasiswaan.satuan.index')" :active="request()->routeIs('kemahasiswaan.satuan.*')">
+                            • Master Satuan (RAB)
+                        </x-responsive-nav-link>
+                        <x-responsive-nav-link :href="route('kemahasiswaan.users.index')" :active="request()->routeIs('kemahasiswaan.users.*')">
+                            • User Management
+                        </x-responsive-nav-link>
+                    </div>
+                </div>
             @endif
         </div>
 

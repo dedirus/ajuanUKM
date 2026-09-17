@@ -58,14 +58,18 @@ class LaporanKemahasiswaanController extends Controller
         ])->findOrFail($ukm_id);
 
         $totalUsulan = $ukm->ajuanKegiatans->count();
-        $disetujuiCount = $ukm->ajuanKegiatans->where('status_akhir', 'disetujui')->count();
+        $disetujuiCount = $ukm->ajuanKegiatans->filter(function ($a) {
+            return in_array($a->status_akhir, ['disetujui', 'menunggu_verifikasi_lpj', 'revisi_lpj', 'sudah_dilaksanakan']);
+        })->count();
         $prosesCount = $ukm->ajuanKegiatans->filter(function ($a) {
             return in_array($a->status_akhir, ['menunggu_pembina', 'menunggu_kemahasiswaan', 'revisi_pembina', 'revisi_kemahasiswaan']);
         })->count();
         $ditolakCount = $ukm->ajuanKegiatans->where('status_akhir', 'ditolak')->count();
 
         $totalAnggaranDiajukan = (float) $ukm->ajuanKegiatans->sum('total_anggaran');
-        $totalAnggaranDisetujui = (float) $ukm->ajuanKegiatans->where('status_akhir', 'disetujui')->sum(function ($a) {
+        $totalAnggaranDisetujui = (float) $ukm->ajuanKegiatans->filter(function ($a) {
+            return in_array($a->status_akhir, ['disetujui', 'menunggu_verifikasi_lpj', 'revisi_lpj', 'sudah_dilaksanakan']);
+        })->sum(function ($a) {
             $approvedDetails = $a->details->where('status_keterangan', 'disetujui')->sum('total');
             return $approvedDetails > 0 ? $approvedDetails : $a->total_anggaran;
         });
@@ -107,14 +111,18 @@ class LaporanKemahasiswaanController extends Controller
     {
         return $ukms->map(function ($ukm) {
             $totalUsulan = $ukm->ajuanKegiatans->count();
-            $disetujuiCount = $ukm->ajuanKegiatans->where('status_akhir', 'disetujui')->count();
+            $disetujuiCount = $ukm->ajuanKegiatans->filter(function ($a) {
+                return in_array($a->status_akhir, ['disetujui', 'menunggu_verifikasi_lpj', 'revisi_lpj', 'sudah_dilaksanakan']);
+            })->count();
             $prosesCount = $ukm->ajuanKegiatans->filter(function ($a) {
                 return in_array($a->status_akhir, ['menunggu_pembina', 'menunggu_kemahasiswaan', 'revisi_pembina', 'revisi_kemahasiswaan']);
             })->count();
             $ditolakCount = $ukm->ajuanKegiatans->where('status_akhir', 'ditolak')->count();
 
             $totalAnggaranDiajukan = (float) $ukm->ajuanKegiatans->sum('total_anggaran');
-            $totalAnggaranDisetujui = (float) $ukm->ajuanKegiatans->where('status_akhir', 'disetujui')->sum(function ($a) {
+            $totalAnggaranDisetujui = (float) $ukm->ajuanKegiatans->filter(function ($a) {
+                return in_array($a->status_akhir, ['disetujui', 'menunggu_verifikasi_lpj', 'revisi_lpj', 'sudah_dilaksanakan']);
+            })->sum(function ($a) {
                 $approvedDetails = $a->details->where('status_keterangan', 'disetujui')->sum('total');
                 return $approvedDetails > 0 ? $approvedDetails : $a->total_anggaran;
             });
@@ -145,14 +153,18 @@ class LaporanKemahasiswaanController extends Controller
     {
         $allAjuans = AjuanKegiatan::with(['details'])->get();
         $totalUsulan = $allAjuans->count();
-        $disetujuiCount = $allAjuans->where('status_akhir', 'disetujui')->count();
+        $disetujuiCount = $allAjuans->filter(function ($a) {
+            return in_array($a->status_akhir, ['disetujui', 'menunggu_verifikasi_lpj', 'revisi_lpj', 'sudah_dilaksanakan']);
+        })->count();
         $prosesCount = $allAjuans->filter(function ($a) {
             return in_array($a->status_akhir, ['menunggu_pembina', 'menunggu_kemahasiswaan', 'revisi_pembina', 'revisi_kemahasiswaan']);
         })->count();
         $ditolakCount = $allAjuans->where('status_akhir', 'ditolak')->count();
 
         $anggaranDiajukan = (float) $allAjuans->sum('total_anggaran');
-        $anggaranDisetujui = (float) $allAjuans->where('status_akhir', 'disetujui')->sum(function ($a) {
+        $anggaranDisetujui = (float) $allAjuans->filter(function ($a) {
+            return in_array($a->status_akhir, ['disetujui', 'menunggu_verifikasi_lpj', 'revisi_lpj', 'sudah_dilaksanakan']);
+        })->sum(function ($a) {
             $approvedDetails = $a->details->where('status_keterangan', 'disetujui')->sum('total');
             return $approvedDetails > 0 ? $approvedDetails : $a->total_anggaran;
         });
