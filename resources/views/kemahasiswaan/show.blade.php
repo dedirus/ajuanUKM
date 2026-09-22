@@ -98,8 +98,57 @@
             </div>
         </div>
 
-        <!-- Form 1: Pemeriksaan Checklist Tabel Detail Kebutuhan Kegiatan -->
-        <form action="{{ route('kemahasiswaan.update-details', $ajuan->id) }}" method="POST" class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+        <!-- Tab Navigation Menu -->
+        <div class="bg-white rounded-2xl p-2 border border-gray-200 shadow-sm flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div class="flex items-center p-1 bg-slate-100 rounded-xl gap-1 w-full sm:w-auto">
+                <!-- Tab 1: Verifikasi & Penyesuaian Anggaran -->
+                <button type="button"
+                        @click="activeTab = 'anggaran'"
+                        :class="activeTab === 'anggaran' ? 'bg-white text-indigo-700 shadow-sm font-black' : 'text-gray-600 hover:text-gray-900 font-semibold'"
+                        class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs sm:text-sm transition-all duration-150 cursor-pointer">
+                    <span class="text-base">📋</span>
+                    <span>Verifikasi &amp; Penyesuaian Anggaran</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded-full font-bold font-mono"
+                          :class="activeTab === 'anggaran' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'bg-gray-200 text-gray-700'">
+                        {{ $ajuan->details->count() }} Item
+                    </span>
+                </button>
+
+                <!-- Tab 2: Riwayat Jejak & Aktivitas Usulan -->
+                <button type="button"
+                        @click="activeTab = 'riwayat'"
+                        :class="activeTab === 'riwayat' ? 'bg-white text-indigo-700 shadow-sm font-black' : 'text-gray-600 hover:text-gray-900 font-semibold'"
+                        class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs sm:text-sm transition-all duration-150 cursor-pointer">
+                    <span class="text-base">⏱️</span>
+                    <span>Riwayat Jejak &amp; Aktivitas Usulan</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded-full font-bold"
+                          :class="activeTab === 'riwayat' ? 'bg-indigo-100 text-indigo-800 border border-indigo-200' : 'bg-gray-200 text-gray-700'">
+                        {{ $ajuan->riwayats->count() }}
+                    </span>
+                </button>
+            </div>
+
+            <!-- Tab Info Indicator -->
+            <div class="text-xs text-gray-500 hidden md:flex items-center gap-2 px-3">
+                <template x-if="activeTab === 'anggaran'">
+                    <span class="text-gray-500 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                        Pemeriksaan rincian RAB, edit kebutuhan, dan keputusan persetujuan akhir
+                    </span>
+                </template>
+                <template x-if="activeTab === 'riwayat'">
+                    <span class="text-gray-500 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                        Linimasa riwayat status dan catatan verifikator dari awal pengajuan
+                    </span>
+                </template>
+            </div>
+        </div>
+
+        <!-- KONTEN TAB 1: Verifikasi & Penyesuaian Anggaran -->
+        <div x-show="activeTab === 'anggaran'" class="space-y-6">
+            <!-- Form 1: Pemeriksaan Checklist Tabel Detail Kebutuhan Kegiatan -->
+            <form action="{{ route('kemahasiswaan.update-details', $ajuan->id) }}" method="POST" class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
             @csrf
 
             <div class="p-6 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -680,15 +729,20 @@
                 </form>
             </div>
         @endif
+        </div>
 
-        <!-- Timeline Riwayat Jejak Usulan Kegiatan -->
-        <x-timeline-riwayat :riwayats="$ajuan->riwayats" />
+        <!-- KONTEN TAB 2: Riwayat Jejak & Aktivitas Usulan -->
+        <div x-show="activeTab === 'riwayat'" x-cloak class="space-y-6">
+            <!-- Timeline Riwayat Jejak Usulan Kegiatan -->
+            <x-timeline-riwayat :riwayats="$ajuan->riwayats" />
+        </div>
     </div>
 
     <!-- Alpine.js logic for checklist toggles & RAB editing -->
     <script>
         function kemahasiswaanReview() {
             return {
+                activeTab: new URLSearchParams(window.location.search).get('tab') || (window.location.hash === '#riwayat' ? 'riwayat' : 'anggaran'),
                 isEditingRab: false,
                 items: [
                     @foreach($ajuan->details as $item)
