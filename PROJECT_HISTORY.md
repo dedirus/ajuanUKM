@@ -224,7 +224,53 @@ Dibuat 4 berkas migrasi:
 - Total automated tests meningkat menjadi: **39 tes lulus 100% (197 assertions)**.
 - Seluruh repositori proyek berhasil diunggah ke GitHub: [https://github.com/dedirus/ajuanUKM](https://github.com/dedirus/ajuanUKM) pada branch `main`.
 
+### Fase 9: Penataan Navigasi Bilah Menu 'Setting'
+- Merapikan navigasi Kemahasiswaan dengan menggabungkan Master UKM, Master Satuan, dan User Management ke dalam dropdown **"Setting"**.
+- Menjadikan navbar lebih ringkas: *Kelola Ajuan*, *Laporan & Statistik*, dan *Setting*.
+
+### Fase 10: Master Satuan RAB & Durasi Kebutuhan Kegiatan
+- Membuat tabel `satuans` dengan seeder awal satuan umum (Unit, Orang, Paket, Hari, Bulan, dll.).
+- Menambahkan kolom `satuan`, `durasi`, dan `satuan_durasi` pada tabel `detail_kegiatans`.
+- Menghadirkan CRUD Master Satuan untuk Kemahasiswaan (`MasterSatuanController`).
+- Menghubungkan dropdown satuan dinamis pada formulir pengajuan Mahasiswa dan verifikasi Kemahasiswaan.
+
+### Fase 11: Fleksibilitas Edit Usulan & Detail RAB Sebelum Disetujui (Role Mahasiswa)
+- Memungkinkan mahasiswa mengedit proposal dan mengubah rincian baris RAB selama usulan belum berstatus disetujui final (`status_akhir != 'disetujui'`).
+- Status usulan tetap berjalan lancar dan total anggaran diperbarui secara otomatis.
+
+### Fase 12: Pilihan Dropdown "Jenis Kegiatan"
+- Menambahkan kolom `jenis_kegiatan` (`Lomba`, `Pelatihan`, `Lainnya`) pada tabel `ajuan_kegiatans`.
+- Ditampilkan pada formulir pengajuan/edit dan badge penanda pada detail usulan serta lembar pengesahan.
+
+### Fase 13: Kemahasiswaan Dapat Mengedit & Memperbarui Tabel RAB
+- Menambahkan mode edit interaktif (Alpine.js) pada halaman verifikasi Kemahasiswaan (`/kemahasiswaan/pengajuan/{id}`).
+- Kemahasiswaan dapat mengubah pos akun, nama barang, harga satuan, durasi, menghapus baris, atau menambah baris pos kebutuhan baru secara realtime.
+
+### Fase 14: Laporan Pertanggungjawaban (LPJ) Pasca-Kegiatan & Data SIMKATMAWA
+- Membuat tabel `lpj_kegiatans` dan `lpj_pesertas` untuk mencatat pelaporan pasca-pelaksanaan kegiatan.
+- Tombol **"Lapor LPJ"** muncul otomatis setelah kegiatan selesai dan tanggal lewat.
+- Pendataan nama mahasiswa, NIM, dan peran untuk borang pemeringkatan nasional SIMKATMAWA Kemendikbudristek.
+- Menghadirkan kalkulator realisasi anggaran terpakai vs pagu serta 4 berkas unggahan bukti kegiatan opsional.
+
+### Fase 15: Pencatatan Multi-Prestasi / Multi-Juara pada LPJ Kegiatan
+- Membuat tabel relasional `lpj_prestasies` untuk mencatat banyak raihan juara dalam satu kegiatan (misal kejuaraan Renang: Juara 1 Gaya Dada, Juara 2 Gaya Bebas, Juara 3 Estafet).
+- Formulir interaktif Alpine.js dengan tombol `+ Tambah Prestasi / Juara` dan penghapusan baris.
+- Showcase kartu perolehan medali (🥇 Emas, 🥈 Perak, 🥉 Perunggu) pada halaman detail Mahasiswa, Pembina, dan Kemahasiswaan.
+
+### Fase 16: Log & Visual Timeline Riwayat Jejak Usulan Kegiatan
+- Membuat tabel `riwayat_kegiatans` dan model `RiwayatKegiatan` untuk mencatat audit trail aktivitas usulan secara kronologis.
+- Logging hooks terpasang otomatis pada `MahasiswaController`, `PembinaController`, dan `KemahasiswaanController`.
+- Komponen Blade terpadu `<x-timeline-riwayat />` menyajikan linimasa vertikal lengkap dengan indikator status terkini, badge pelaku, waktu lengkap WIB, dan kutipan catatan verifikator.
+- Dilengkapi otomatisasi backfill data log pada data usulan lama saat migrasi dijalankan.
+
+### Fase 17: Tab Menu Interaktif pada Halaman Pemeriksaan Kemahasiswaan
+- Memisahkan area kerja verifikasi pada `/kemahasiswaan/pengajuan/{id}` menjadi dua tab menu:
+  1. **Tab 1: `Verifikasi & Penyesuaian Anggaran`**: Tabel checklist RAB, edit anggaran, form persetujuan akhir, dan verifikasi LPJ.
+  2. **Tab 2: `Riwayat Jejak & Aktivitas Usulan`**: Kartu linimasa vertikal jejak aktivitas usulan.
+- Perpindahan tab instan tanpa reload (Alpine.js) dan mendukung URL parameter/hash (`#riwayat` / `?tab=riwayat`).
+
 ---
+
 
 ## 4. Daftar Akun Uji Coba (Credentials)
 
@@ -283,9 +329,12 @@ AjuanUKM/
 │   ├── Http/
 │   │   ├── Controllers/
 │   │   │   ├── DashboardController.php        # Pengarah dashboard sesuai role
-│   │   │   ├── MahasiswaController.php        # Flow usulan mahasiswa
-│   │   │   ├── PembinaController.php          # Flow verifikasi pembina
-│   │   │   ├── KemahasiswaanController.php    # Flow verifikasi kemahasiswaan & filter
+│   │   │   ├── MahasiswaController.php        # Flow usulan mahasiswa, revisi, & submit LPJ
+│   │   │   ├── PembinaController.php          # Flow verifikasi & catatan pembina
+│   │   │   ├── KemahasiswaanController.php    # Flow verifikasi, edit RAB, approve final, & LPJ
+│   │   │   ├── MasterSatuanController.php     # CRUD Master Satuan kebutuhan
+│   │   │   ├── MasterUkmController.php        # CRUD Master UKM
+│   │   │   ├── MasterUserController.php       # CRUD Pengguna & Hak Akses
 │   │   │   ├── LaporanKemahasiswaanController.php # Laporan rekapitulasi UKM & statistik
 │   │   │   └── PengesahanPdfController.php    # Export Lembar Pengesahan PDF (A4)
 │   │   └── Middleware/
@@ -293,23 +342,35 @@ AjuanUKM/
 │   └── Models/
 │       ├── Ukm.php                            # Model master UKM
 │       ├── User.php                           # Model pengguna & relasi role
+│       ├── Satuan.php                         # Model master satuan kebutuhan RAB
 │       ├── AjuanKegiatan.php                  # Model header usulan kegiatan
-│       └── DetailKegiatan.php                 # Model detail item anggaran (RAB)
+│       ├── DetailKegiatan.php                 # Model detail item anggaran (RAB)
+│       ├── LpjKegiatan.php                    # Model laporan pertanggungjawaban
+│       ├── LpjPeserta.php                     # Model pendataan peserta SIMKATMAWA
+│       ├── LpjPrestasi.php                    # Model multi-prestasi/juara lomba
+│       └── RiwayatKegiatan.php                # Model audit trail jejak aktivitas kegiatan
 ├── database/
-│   ├── migrations/                            # 4 migrasi custom untuk skema UKM & ajuan
+│   ├── migrations/                            # Migrasi skema database lengkap
 │   └── seeders/
+│       ├── DatabaseSeeder.php
+│       ├── SatuanSeeder.php                   # Seeder master satuan
 │       └── AjuanUKMSeeder.php                 # Seeder master UKM, user, & sampel ajuan
 ├── resources/
 │   └── views/
-│       ├── auth/login.blade.php               # Halaman login dengan 1-click quick switcher
+│       ├── components/
+│       │   └── timeline-riwayat.blade.php     # Komponen Blade visual linimasa jejak usulan
 │       ├── layouts/                           # Layouts app & navigasi berbasis role
-│       ├── mahasiswa/                         # Views untuk mahasiswa (index, create, show)
-│       ├── pembina/                           # Views untuk pembina (index, show)
-│       ├── kemahasiswaan/                     # Views untuk kemahasiswaan (index, show, laporan/)
+│       ├── mahasiswa/                         # Views mahasiswa (index, create, edit, show, lpj)
+│       ├── pembina/                           # Views pembina (index, show)
+│       ├── kemahasiswaan/                     # Views kemahasiswaan (index, show, satuan/, ukm/, users/, laporan/)
 │       └── pdf/                               # Template dokumen resmi siap cetak
 │           └── lembar_pengesahan.blade.php    # Template PDF Lembar Pengesahan & Disposisi
 ├── tests/Feature/
-│   └── AjuanUKMWorkflowTest.php               # End-to-end automated workflow test
+│   ├── AjuanUKMWorkflowTest.php               # End-to-end automated workflow test (20 passed)
+│   ├── LpjWorkflowTest.php                    # Pengujian alur LPJ & SIMKATMAWA (8 passed)
+│   ├── MasterSatuanTest.php                   # Pengujian Master Satuan (8 passed)
+│   └── RiwayatKegiatanTest.php                # Pengujian Audit Trail Riwayat Kegiatan (6 passed)
 ├── PROJECT_HISTORY.md                         # Dokumentasi riwayat projek ini
-└── README.md
+└── README.md                                  # Dokumentasi utama proyek
 ```
+

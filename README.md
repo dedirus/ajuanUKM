@@ -1,66 +1,135 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# AjuanUKM - Sistem Informasi Pengajuan, Verifikasi Kegiatan & LPJ SIMKATMAWA
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![Laravel](https://img.shields.io/badge/Laravel-10.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![Alpine.js](https://img.shields.io/badge/Alpine.js-3.x-8BC0D0?style=for-the-badge&logo=alpine.js&logoColor=white)](https://alpinejs.dev)
+[![Tests](https://img.shields.io/badge/Tests-67%20Passed-success?style=for-the-badge&logo=githubactions&logoColor=white)](#-pengujian-otomatis-automated-tests)
 
-## About Laravel
+**AjuanUKM** adalah platform berbasis web untuk digitalisasi, transparansi, dan standardisasi alur pengajuan kegiatan mahasiswa berbasis **Unit Kegiatan Mahasiswa (UKM)**, verifikasi berjenjang oleh **Dosen Pembina** dan **Biro Kemahasiswaan**, serta pelaporan **LPJ Pasca-Kegiatan** yang terintegrasi langsung dengan borang pemeringkatan nasional **SIMKATMAWA** Kemendikbudristek.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🌟 Fitur Unggulan
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1. Alur Persetujuan Berjenjang (Multi-Role Approval Workflow)
+- **Role Mahasiswa (Pengusul UKM)**: Membuat proposal kegiatan, mengisi tabel rincian anggaran biaya (RAB) dinamis, mengunggah proposal (PDF/Word), serta memantau status persetujuan. Mahasiswa dapat mengedit usulan & detail RAB kapan saja selama belum disetujui final.
+- **Role Dosen Pembina UKM**: Memeriksa kelayakan usulan kegiatan khusus UKM binaannya, memberikan catatan/arahan, meminta revisi, atau memberikan persetujuan (*approval*).
+- **Role Biro Kemahasiswaan**: Memeriksa usulan seluruh UKM, menyesuaikan/mengedit baris item kebutuhan RAB, memberikan disposisi persetujuan akhir (*final approval*), serta mengelola master data.
 
-## Learning Laravel
+### 2. Pengelolaan RAB & Master Satuan Fleksibel
+- **Master Satuan Kebutuhan**: Pengelolaan satuan barang/jasa dinamis (Unit, Orang, Paket, Hari, Bulan, Lembar, dll.).
+- **Durasi & Satuan Durasi**: Perhitungan subtotal otomatis secara realtime:  
+  $$\text{Subtotal} = \text{Harga Satuan} \times \text{Jumlah} \times \text{Durasi}$$
+- **Mode Edit RAB Kemahasiswaan**: Verifikator universitas dapat mengubah harga satuan, kuantitas, durasi, menambah baris baru, maupun mencoret item anggaran yang tidak disetujui secara langsung di antarmuka web.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 3. Laporan Pertanggungjawaban (LPJ) & Data SIMKATMAWA
+- **Pencatatan Multi-Prestasi / Multi-Juara**: Perekaman banyak capaian juara dalam satu kegiatan perlombaan (misal: *Juara 1 Gaya Dada*, *Juara 2 Gaya Bebas*, *Juara 3 Estafet*) dilengkapi nomor lomba, tingkat wilayah (*Internasional s.d. Internal PT*), dan nama mahasiswa peraih medali 🥇🥈🥉.
+- **Pendataan Peserta SIMKATMAWA**: Pencatatan Nama Lengkap, NIM/NPM, dan Peran kontingen mahasiswa untuk pelaporan borang akreditasi/pemeringkatan universitas.
+- **Kalkulasi Realisasi Anggaran**: Perhitungan otomatis penghematan/efisiensi anggaran riil vs pagu yang disetujui.
+- **Unggah 4 Berkas Dokumentasi**: Sertifikat kejuaraan, foto dokumentasi kegiatan, foto penyerahan piala, dan surat undangan resmi.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 4. Log & Visual Linimasa Riwayat Usulan Kegiatan
+- **Audit Trail Komprehensif**: Pencatatan jejak riwayat secara otomatis setiap kali usulan diajukan, diedit, disetujui, diminta revisi, disesuaikan RAB-nya, hingga LPJ diverifikasi.
+- **Komponen Linimasa Vertikal (`<x-timeline-riwayat />`)**: Tampilan alur visual kronologis dengan status peralihan, indikator *"Status Terkini"*, waktu lengkap WIB, dan kutipan catatan verifikator.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 5. Tab Menu Interaktif Kemahasiswaan
+- Pemisahan antarmuka halaman verifikasi (`/kemahasiswaan/pengajuan/{id}`) menjadi dua tab menu responsif:
+  - 📋 **Tab 1: `Verifikasi & Penyesuaian Anggaran`**: Checklist RAB, mode edit kebutuhan, dan formulir persetujuan.
+  - ⏱️ **Tab 2: `Riwayat Jejak & Aktivitas Usulan`**: Linimasa lengkap kronologi perjalanan usulan.
 
-## Laravel Sponsors
+### 6. Dokumen Resmi & Rekapitulasi Laporan
+- **Cetak Lembar Pengesahan PDF (A4)**: Dilengkapi QR-code verifikasi digital, rincian anggaran per akun, dan kolom tanda tangan berjenjang.
+- **Dashboard & Ekspor Excel (.xlsx)**: Rekapitulasi realisasi anggaran per UKM, multi-sheet export, filter periode tanggal, dan metrik visual capaian kegiatan.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+---
 
-### Premium Partners
+## 👥 Kredensial Uji Coba Default
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+Semua akun menggunakan kata sandi standar: **`password`**
 
-## Contributing
+| Peran (Role) | Nama Akun | Email Login | Cakupan Hak Akses |
+|---|---|---|---|
+| **Kemahasiswaan** | Biro Kemahasiswaan & Alumni | `kemahasiswaan@univ.ac.id` | Administrator Universitas, Verifikasi Final, Master Data |
+| **Pembina** | Dr. Ir. Hendra Setiawan, M.T. | `pembina.robotika@univ.ac.id` | Pembina UKM Robotika & Otomasi |
+| **Pembina** | Rina Wijayanti, M.Pd. | `pembina.musik@univ.ac.id` | Pembina UKM Seni Musik Kampus |
+| **Pembina** | Bambang Sudibyo, M.Or. | `pembina.basket@univ.ac.id` | Pembina UKM Bola Basket Patriot |
+| **Mahasiswa** | Ahmad Fauzi | `mahasiswa.robotika@univ.ac.id` | Pengusul UKM Robotika & Otomasi |
+| **Mahasiswa** | Putri Ayu | `mahasiswa.musik@univ.ac.id` | Pengusul UKM Seni Musik Kampus |
+| **Mahasiswa** | Dimas Arya | `mahasiswa.basket@univ.ac.id` | Pengusul UKM Bola Basket Patriot |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+*Tersedia juga fitur 1-Click Quick Login Switcher pada halaman login untuk mempermudah demonstrasi dan evaluasi peran.*
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🚀 Panduan Instalasi & Menjalankan Aplikasi
 
-## Security Vulnerabilities
+### Kebutuhan Sistem (Prerequisites)
+- PHP >= 8.1 (Disarankan PHP 8.2 / 8.4)
+- Composer >= 2.x
+- Node.js >= 18.x & NPM
+- MySQL >= 8.0
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Langkah Instalasi
+```bash
+# 1. Clone repositori
+git clone https://github.com/dedirus/ajuanUKM.git
+cd ajuanUKM
 
-## License
+# 2. Pasang dependensi PHP
+composer install
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# 3. Pasang dependensi Frontend (JavaScript/CSS)
+npm install
+
+# 4. Salin berkas lingkungan (.env) dan generate application key
+cp .env.example .env
+php artisan key:generate
+
+# 5. Konfigurasikan koneksi database di berkas .env
+# DB_DATABASE=ajuan_ukm
+# DB_USERNAME=root
+# DB_PASSWORD=
+
+# 6. Jalankan migrasi dan seeder
+php artisan migrate --seed
+
+# 7. Buat symbolic link ke folder penyimpanan berkas
+php artisan storage:link
+
+# 8. Kompilasi aset frontend
+npm run build
+
+# 9. Jalankan server lokal
+php artisan serve
+```
+
+Akses aplikasi di browser melalui: **`http://127.0.0.1:8000`**
+
+---
+
+## 🧪 Pengujian Otomatis (Automated Tests)
+
+Aplikasi memiliki rangkaian pengujian terotomatisasi (*Feature & Unit Tests*) komprehensif:
+
+```bash
+php artisan test
+```
+
+### Hasil Uji Terkini:
+```
+PASS  Tests\Feature\AjuanUKMWorkflowTest (20 passed)
+PASS  Tests\Feature\RiwayatKegiatanTest (6 passed)
+PASS  Tests\Feature\LpjWorkflowTest (8 passed)
+PASS  Tests\Feature\MasterSatuanTest (8 passed)
+PASS  Tests\Feature\Auth\... (18 passed)
+PASS  Tests\Feature\ProfileTest (5 passed)
+PASS  Tests\Unit\... (2 passed)
+
+Total: 67 passed (429 assertions)
+```
+
+---
+
+## 📄 Lisensi
+Aplikasi ini dikembangkan di bawah lisensi open-source [MIT License](LICENSE).
