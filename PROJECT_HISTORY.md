@@ -269,6 +269,33 @@ Dibuat 4 berkas migrasi:
   2. **Tab 2: `Riwayat Jejak & Aktivitas Usulan`**: Kartu linimasa vertikal jejak aktivitas usulan.
 - Perpindahan tab instan tanpa reload (Alpine.js) dan mendukung URL parameter/hash (`#riwayat` / `?tab=riwayat`).
 
+### Fase 18: Refactoring Validasi Data dengan Dedicated Form Requests (Fase Awal)
+- Membuat berkas Form Request terdedikasi:
+  1. `App\Http\Requests\StoreAjuanKegiatanRequest`: Validasi pengajuan usulan baru dan detail baris RAB (dokumen proposal wajib diunggah).
+  2. `App\Http\Requests\UpdateAjuanKegiatanRequest`: Validasi pembaruan/revisi usulan (dokumen proposal bersifat opsional).
+  3. `App\Http\Requests\ReviewAjuanRequest`: Validasi telaah Pembina (status `disetujui`, `revisi`, atau `ditolak`; catatan wajib saat status revisi).
+- Memindahkan seluruh aturan `rules()` dan pesan bahasa Indonesia kustom `messages()` dari controller ke dalam masing-masing Form Request.
+- Mengatur `authorize(): bool` mengembalikan `true` karena otorisasi hak akses peran ditangani oleh middleware `EnsureUserHasRole`.
+- Menyuntikkan Form Request ke dalam `MahasiswaController::store`, `MahasiswaController::update`, dan `PembinaController::verify`.
+
+### Fase 19: Implementasi Penuh Rekomendasi Audit Kode, Service Layer & Optimasi Database
+- **Abstraksi Service Layer (`app/Services`)**:
+  - `App\Services\AjuanKegiatanService`: Memisahkan business logic manajemen usulan (store, update, verifikasi Pembina, update detail RAB, dan persetujuan Kemahasiswaan) dari controller.
+  - `App\Services\LpjKegiatanService`: Memisahkan business logic pelaporan LPJ (sinkronisasi kontingen SIMKATMAWA, raihan multi-prestasi, penanganan 4 berkas unggahan, dan verifikasi/revisi LPJ) dari controller.
+  - Mengonversi `MahasiswaController`, `PembinaController`, dan `KemahasiswaanController` menjadi *skinny controllers* yang terisolasi rapi.
+- **Dedicated Form Requests 100% Coverage**:
+  - Menuntaskan eksekusi Form Request untuk seluruh endpoint aplikasi yang tersisa:
+    - Mahasiswa: `StoreLpjRequest`
+    - Kemahasiswaan: `UpdateRabDetailItemsRequest`, `ApproveAjuanRequest`, `VerifyLpjRequest`
+    - Master Data: `StoreMasterUkmRequest`, `UpdateMasterUkmRequest`, `StoreMasterSatuanRequest`, `UpdateMasterSatuanRequest`, `StoreMasterUserRequest`, `UpdateMasterUserRequest`
+- **Optimasi Database dengan Indeks Komposit**:
+  - Migrasi `2026_10_16_035100_add_composite_indexes_to_ajuan_kegiatans_table.php` menambahkan 3 composite index pada tabel `ajuan_kegiatans`:
+    - `idx_ajuan_ukm_status` pada `(ukm_id, status_akhir)`
+    - `idx_ajuan_tgl_status` pada `(tanggal_kegiatan, status_akhir)`
+    - `idx_ajuan_user_status` pada `(user_id, status_akhir)`
+- **Verifikasi Rangkaian Uji Otomatis**:
+  - Menjalankan seluruh rangkaian tes: **67 tests lolos 100% (429 assertions)**.
+
 ---
 
 
@@ -336,9 +363,25 @@ AjuanUKM/
 │   │   │   ├── MasterUkmController.php        # CRUD Master UKM
 │   │   │   ├── MasterUserController.php       # CRUD Pengguna & Hak Akses
 │   │   │   ├── LaporanKemahasiswaanController.php # Laporan rekapitulasi UKM & statistik
-│   │   │   └── PengesahanPdfController.php    # Export Lembar Pengesahan PDF (A4)
+│   │   ├── Requests/
+│   │   │   ├── StoreAjuanKegiatanRequest.php  # Validasi input usulan kegiatan baru
+│   │   │   ├── UpdateAjuanKegiatanRequest.php # Validasi input perbaikan/revisi usulan
+│   │   │   ├── ReviewAjuanRequest.php         # Validasi telaah/persetujuan Pembina
+│   │   │   ├── StoreLpjRequest.php            # Validasi input LPJ mahasiswa
+│   │   │   ├── UpdateRabDetailItemsRequest.php# Validasi perubahan detail item RAB
+│   │   │   ├── ApproveAjuanRequest.php        # Validasi persetujuan final Kemahasiswaan
+│   │   │   ├── VerifyLpjRequest.php           # Validasi telaah & revisi LPJ Kemahasiswaan
+│   │   │   ├── StoreMasterUkmRequest.php      # Validasi tambah master UKM
+│   │   │   ├── UpdateMasterUkmRequest.php     # Validasi edit master UKM
+│   │   │   ├── StoreMasterSatuanRequest.php   # Validasi tambah master Satuan
+│   │   │   ├── UpdateMasterSatuanRequest.php  # Validasi edit master Satuan
+│   │   │   ├── StoreMasterUserRequest.php     # Validasi tambah akun Pengguna
+│   │   │   └── UpdateMasterUserRequest.php    # Validasi edit akun Pengguna
 │   │   └── Middleware/
 │   │       └── EnsureUserHasRole.php          # Otorisasi hak akses role
+│   ├── Services/
+│   │   ├── AjuanKegiatanService.php           # Business logic & workflow usulan kegiatan
+│   │   └── LpjKegiatanService.php             # Business logic LPJ, berkas, & SIMKATMAWA
 │   └── Models/
 │       ├── Ukm.php                            # Model master UKM
 │       ├── User.php                           # Model pengguna & relasi role

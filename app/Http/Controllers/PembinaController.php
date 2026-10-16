@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ReviewAjuanRequest;
 use App\Models\AjuanKegiatan;
+use App\Services\AjuanKegiatanService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -47,7 +49,7 @@ class PembinaController extends Controller
     /**
      * Aksi verifikasi Pembina untuk menekan tombol "Disetujui" (atau tolak) beserta catatan.
      */
-    public function verify(Request $request, int $id): RedirectResponse
+    public function verify(ReviewAjuanRequest $request, int $id, AjuanKegiatanService $service): RedirectResponse
     {
         $user = Auth::user();
 
@@ -55,55 +57,10 @@ class PembinaController extends Controller
             ->where('ukm_id', $user->ukm_id)
             ->firstOrFail();
 
-        $validated = $request->validate([
-            'status' => 'required|in:disetujui,revisi,ditolak',
-            'catatan' => $request->status === 'revisi' ? 'required|string|max:1000' : 'nullable|string|max:1000',
-        ], [
-            'catatan.required' => 'Catatan revisi wajib diisi agar mahasiswa mengetahui bagian apa yang perlu diperbaiki.',
-        ]);
+        $validated = $request->validated();
+        $result = $service->verifyByPembina($ajuan, $user, $validated['status'], $validated['catatan'] ?? null);
 
-        $ajuan->status_pembina = $validated['status'];
-        $ajuan->catatan_pembina = $validated['catatan'];
-        $ajuan->verified_pembina_at = now();
-        $ajuan->verified_pembina_by = $user->id;
-
-        $statusSebelumnya = $ajuan->status_akhir;
-
-        if ($validated['status'] === 'disetujui') {
-            // Jika sebelumnya belum disetujui kemahasiswaan, ubah status akhir menjadi menunggu kemahasiswaan
-            if ($ajuan->status_kemahasiswaan !== 'disetujui') {
-                $ajuan->status_akhir = 'menunggu_kemahasiswaan';
-            }
-            $pesan = "Ajuan kegiatan '{$ajuan->nama_kegiatan}' berhasil disetujui oleh Pembina!";
-            $aksi = 'Persetujuan Pembina';
-            $catatan = $validated['catatan'] ?: 'Usulan kegiatan disetujui oleh Dosen Pembina.';
-        } elseif ($validated['status'] === 'revisi') {
-            $ajuan->status_akhir = 'revisi_pembina';
-            $ajuan->catatan_revisi_terakhir = $validated['catatan'];
-            $pesan = "Permintaan revisi berhasil dikirimkan ke mahasiswa dengan catatan.";
-            $aksi = 'Permintaan Revisi (Pembina)';
-            $catatan = $validated['catatan'];
-        } else {
-            $ajuan->status_akhir = 'ditolak';
-            $ajuan->catatan_revisi_terakhir = $validated['catatan'];
-            $pesan = "Ajuan kegiatan '{$ajuan->nama_kegiatan}' telah ditolak.";
-            $aksi = 'Penolakan Usulan (Pembina)';
-            $catatan = $validated['catatan'];
-        }
-
-        $ajuan->save();
-
-        // Catat log riwayat verifikasi Pembina
-        $ajuan->catatRiwayat(
-            aksi: $aksi,
-            statusSesudah: $ajuan->status_akhir,
-            catatan: $catatan,
-            statusSebelumnya: $statusSebelumnya,
-            userId: $user->id,
-            role: 'pembina'
-        );
-
-        return redirect()->route('pembina.show', $ajuan->id)->with('success', $pesan);
+        return redirect()->route('pembina.show', $ajuan->id)->with('success', $result['message']);
     }
 
     /**

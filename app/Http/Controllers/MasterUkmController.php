@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreMasterUkmRequest;
+use App\Http\Requests\UpdateMasterUkmRequest;
 use App\Models\AjuanKegiatan;
 use App\Models\Ukm;
 use App\Models\User;
@@ -70,19 +72,9 @@ class MasterUkmController extends Controller
     /**
      * Simpan data UKM baru ke database.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreMasterUkmRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'kode' => 'required|string|max:20|alpha_dash|unique:ukms,kode',
-            'nama_ukm' => 'required|string|max:255',
-            'kategori' => 'required|string|max:100',
-            'deskripsi' => 'nullable|string|max:1000',
-            'pembina_user_id' => 'nullable|exists:users,id',
-            'pembina_nama_manual' => 'nullable|string|max:255',
-        ], [
-            'kode.unique' => 'Kode UKM sudah digunakan oleh UKM lain.',
-            'kode.alpha_dash' => 'Kode UKM hanya boleh berisi huruf, angka, dan tanda strip/garis bawah.',
-        ]);
+        $validated = $request->validated();
 
         $pembinaNama = null;
         if ($request->filled('pembina_user_id')) {
@@ -171,21 +163,11 @@ class MasterUkmController extends Controller
     /**
      * Perbarui data master UKM.
      */
-    public function update(Request $request, int $id): RedirectResponse
+    public function update(UpdateMasterUkmRequest $request, int $id): RedirectResponse
     {
         $ukm = Ukm::findOrFail($id);
 
-        $validated = $request->validate([
-            'kode' => 'required|string|max:20|alpha_dash|unique:ukms,kode,' . $ukm->id,
-            'nama_ukm' => 'required|string|max:255',
-            'kategori' => 'required|string|max:100',
-            'deskripsi' => 'nullable|string|max:1000',
-            'pembina_user_id' => 'nullable|exists:users,id',
-            'pembina_nama_manual' => 'nullable|string|max:255',
-        ], [
-            'kode.unique' => 'Kode UKM sudah digunakan oleh UKM lain.',
-            'kode.alpha_dash' => 'Kode UKM hanya boleh berisi huruf, angka, dan tanda strip/garis bawah.',
-        ]);
+        $validated = $request->validated();
 
         $pembinaNama = $ukm->pembina_nama;
         if ($request->filled('pembina_user_id')) {

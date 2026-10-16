@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreMasterSatuanRequest;
+use App\Http\Requests\UpdateMasterSatuanRequest;
 use App\Models\DetailKegiatan;
 use App\Models\Satuan;
 use Illuminate\Http\RedirectResponse;
@@ -49,17 +51,9 @@ class MasterSatuanController extends Controller
     /**
      * Simpan master satuan baru ke database.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreMasterSatuanRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'nama_satuan' => 'required|string|max:50|unique:satuans,nama_satuan',
-            'keterangan' => 'nullable|string|max:255',
-            'is_aktif' => 'nullable|boolean',
-        ], [
-            'nama_satuan.required' => 'Nama satuan wajib diisi.',
-            'nama_satuan.unique' => 'Satuan ini sudah terdaftar dalam sistem.',
-            'nama_satuan.max' => 'Nama satuan maksimal 50 karakter.',
-        ]);
+        $validated = $request->validated();
 
         $validated['nama_satuan'] = trim($validated['nama_satuan']);
         $validated['is_aktif'] = $request->has('is_aktif');
@@ -73,19 +67,11 @@ class MasterSatuanController extends Controller
     /**
      * Perbarui master satuan yang ada.
      */
-    public function update(Request $request, int $id): RedirectResponse
+    public function update(UpdateMasterSatuanRequest $request, int $id): RedirectResponse
     {
         $satuan = Satuan::findOrFail($id);
 
-        $validated = $request->validate([
-            'nama_satuan' => 'required|string|max:50|unique:satuans,nama_satuan,' . $id,
-            'keterangan' => 'nullable|string|max:255',
-            'is_aktif' => 'nullable|boolean',
-        ], [
-            'nama_satuan.required' => 'Nama satuan wajib diisi.',
-            'nama_satuan.unique' => 'Satuan ini sudah terdaftar dalam sistem.',
-            'nama_satuan.max' => 'Nama satuan maksimal 50 karakter.',
-        ]);
+        $validated = $request->validated();
 
         $oldName = $satuan->nama_satuan;
         $newName = trim($validated['nama_satuan']);

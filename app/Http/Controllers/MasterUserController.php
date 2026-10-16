@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreMasterUserRequest;
+use App\Http\Requests\UpdateMasterUserRequest;
 use App\Models\Ukm;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -68,26 +70,9 @@ class MasterUserController extends Controller
     /**
      * Simpan pengguna baru ke database.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreMasterUserRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|in:mahasiswa,pembina,kemahasiswaan',
-            'ukm_id' => [
-                'nullable',
-                Rule::requiredIf(fn () => in_array($request->role, ['mahasiswa', 'pembina'])),
-                'exists:ukms,id'
-            ],
-            'nim_nip' => 'nullable|string|max:50',
-            'no_hp' => 'nullable|string|max:25',
-        ], [
-            'ukm_id.required_if' => 'UKM wajib dipilih untuk role Mahasiswa atau Pembina.',
-            'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
-            'password.min' => 'Kata sandi minimal berjumlah 8 karakter.',
-            'email.unique' => 'Alamat email sudah terdaftar di sistem.',
-        ]);
+        $validated = $request->validated();
 
         $user = User::create([
             'name' => trim($validated['name']),
@@ -125,28 +110,11 @@ class MasterUserController extends Controller
     /**
      * Perbarui data pengguna di database.
      */
-    public function update(Request $request, int $id): RedirectResponse
+    public function update(UpdateMasterUserRequest $request, int $id): RedirectResponse
     {
         $user = User::findOrFail($id);
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:8|confirmed',
-            'role' => 'required|in:mahasiswa,pembina,kemahasiswaan',
-            'ukm_id' => [
-                'nullable',
-                Rule::requiredIf(fn () => in_array($request->role, ['mahasiswa', 'pembina'])),
-                'exists:ukms,id'
-            ],
-            'nim_nip' => 'nullable|string|max:50',
-            'no_hp' => 'nullable|string|max:25',
-        ], [
-            'ukm_id.required_if' => 'UKM wajib dipilih untuk role Mahasiswa atau Pembina.',
-            'password.confirmed' => 'Konfirmasi kata sandi baru tidak cocok.',
-            'password.min' => 'Kata sandi baru minimal berjumlah 8 karakter.',
-            'email.unique' => 'Alamat email sudah terdaftar di sistem.',
-        ]);
+        $validated = $request->validated();
 
         $userData = [
             'name' => trim($validated['name']),
