@@ -1,0 +1,58 @@
+nameOverride: app
+service:
+  externalPort: 8080
+  internalPort: 8080
+ingress:
+  enabled: true
+  className: "nginx"
+  path: "/ajuanUKM(/|$)(.*)"
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+    nginx.ingress.kubernetes.io/x-forwarded-prefix: "/ajuanUKM"
+livenessProbe: &livenessProbe
+  enabled: false
+readinessProbe: &readinessProbe
+  enabled: false
+startupProbe: &startupProbe
+  enabled: true
+  path: "/up"
+podAnnotations:
+  reloader.stakater.com/auto: "true"
+serviceAccount: {}
+extraEnvFrom: &extraEnvFrom
+  - configMapRef:
+      name: "${HELM_RELEASE_NAME}-static"
+  - configMapRef:
+      name: "${HELM_RELEASE_NAME}-config"
+extraEnv: &extraEnv
+  - name: DB_URL
+    valueFrom:
+      secretKeyRef:
+        name: postgresql-creds
+        key: uri
+  - name: REDIS_HOST
+    valueFrom:
+      secretKeyRef:
+        name: redis-creds
+        key: host
+
+.x-worker-template: &workerTemplate
+  replicaCount: 1
+  labels:
+    worker-type: worker
+  args: [php, artisan, queue:work,]
+  livenessProbe: *livenessProbe
+  readinessProbe: *readinessProbe
+  startupProbe: *startupProbe
+  extraEnv: *extraEnv
+  extraEnvFrom: *extraEnvFrom
+
+# workers:
+#   workers-queue-default:
+#     <<: *workerTemplate
+#     args: [php, artisan, queue:work, "--queue=default"]
+#   worker-schedule:
+#     <<: *workerTemplate
+#     labels:
+#       worker-type: scheduler
+#     args: [php, artisan, schedule:work]

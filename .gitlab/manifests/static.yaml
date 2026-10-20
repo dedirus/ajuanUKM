@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ${HELM_RELEASE_NAME}-static
+  namespace: ${KUBE_NAMESPACE}
+data:
+  APP_ENV: ${CI_ENVIRONMENT_NAME}
+  APP_URL: ${CI_ENVIRONMENT_URL}
+  APP_NAME: "Attendance Service"
+  APP_DEBUG: "false"
+
+  LOG_CHANNEL: "sentry"
+
+  DB_CONNECTION: "pgsql"
+
+  SESSION_DRIVER: "database"
+  FILESYSTEM_DISK: "s3"
+  QUEUE_CONNECTION: "database"
+  CACHE_STORE: "redis"
+
+  SENTRY_TRACES_SAMPLE_RATE: "1"

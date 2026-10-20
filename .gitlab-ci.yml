@@ -1,0 +1,14 @@
+---
+include:
+  - project: "unpad/devops/pipeline"
+    ref: v4
+    file: "/templates/base.gitlab-ci.yml"
+
+variables:
+  TEST_DISABLED: "true"
+
+  STAGING_URL: "https://kemahasiswaan.stg.unpad.ac.id/ajuanUKM"
+  PRODUCTION_URL: "https://kemahasiswaan.unpad.ac.id/ajuanUKM"
+  DB_INITIALIZE: "php artisan migrate --force"
+  DB_MIGRATE: "php artisan migrate --force"
+  AUTO_DEVOPS_EXTERNAL_HPA: "true"
