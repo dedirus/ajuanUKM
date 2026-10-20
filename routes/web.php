@@ -23,6 +23,10 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+Route::get('/up', function () {
+    return "OK";
+});
+
 // Central Dashboard Route
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth'])
