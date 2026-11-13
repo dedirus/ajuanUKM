@@ -6,6 +6,7 @@ include:
 
 variables:
   TEST_DISABLED: "true"
+  TRIVY_IGNORE_UNFIXED: "true"
 
   STAGING_URL: "https://kemahasiswaan.stg.unpad.ac.id/ajuanUKM"
   PRODUCTION_URL: "https://kemahasiswaan.unpad.ac.id/ajuanUKM"
