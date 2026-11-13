@@ -10,6 +10,6 @@ variables:
 
   STAGING_URL: "https://kemahasiswaan.stg.unpad.ac.id/ajuanUKM"
   PRODUCTION_URL: "https://kemahasiswaan.unpad.ac.id/ajuanUKM"
-  DB_INITIALIZE: "php artisan migrate --force"
-  DB_MIGRATE: "php artisan migrate --force"
+  DB_INITIALIZE: "php artisan migrate --force && php artisan db:seed --force"
+  DB_MIGRATE: "php artisan migrate --force && php artisan db:seed --force"
   AUTO_DEVOPS_EXTERNAL_HPA: "true"

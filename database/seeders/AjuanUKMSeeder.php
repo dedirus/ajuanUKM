@@ -154,8 +154,9 @@ class AjuanUKMSeeder extends Seeder
             Storage::disk('public')->put($dummyPdfPath, $pdfContent);
         }
 
-        // 5. Buat Sampel Ajuan 1: Robotika (Status: Menunggu Verifikasi Pembina)
-        $ajuan1 = AjuanKegiatan::create([
+        // 5. Buat Sampel Ajuan (hanya jika belum ada data ajuan sebelumnya)
+        if (AjuanKegiatan::count() === 0) {
+            $ajuan1 = AjuanKegiatan::create([
             'user_id' => $mhsRobotika->id,
             'ukm_id' => $ukmRobotika->id,
             'nama_kegiatan' => 'Workshop IoT dan Robotika Kampus 2026',
@@ -343,5 +344,6 @@ class AjuanUKMSeeder extends Seeder
             'status_keterangan' => 'disetujui',
             'catatan' => 'Paket konsumsi 2 hari',
         ]);
+        }
     }
 }
