@@ -30,11 +30,13 @@ extraEnv: &extraEnv
       secretKeyRef:
         name: postgresql-creds
         key: uri
+        optional: true
   - name: REDIS_HOST
     valueFrom:
       secretKeyRef:
         name: redis-creds
         key: host
+        optional: true
 
 .x-worker-template: &workerTemplate
   replicaCount: 1
