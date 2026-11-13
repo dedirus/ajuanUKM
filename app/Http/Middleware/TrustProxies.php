@@ -10,6 +10,10 @@ class TrustProxies extends Middleware
     /**
      * The trusted proxies for this application.
      *
+     * In Laravel 10, this is the equivalent of Laravel 11's:
+     * $middleware->trustProxies(at: ['0.0.0.0/0']);
+     * Setting '*' trusts all proxies dynamically (both IPv4 and IPv6).
+     *
      * @var array<int, string>|string|null
      */
     protected $proxies = '*';
