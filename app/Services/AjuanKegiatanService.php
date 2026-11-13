@@ -16,7 +16,8 @@ class AjuanKegiatanService
     public function createAjuan(User $user, array $validated, ?UploadedFile $file): AjuanKegiatan
     {
         return DB::transaction(function () use ($user, $validated, $file) {
-            $path = $file ? $file->store('dokumen_proposal', 'public') : '';
+            $disk = config('filesystems.default', 'public');
+            $path = $file ? $file->store('dokumen_proposal', $disk) : '';
             $originalName = $file ? $file->getClientOriginalName() : '';
 
             $totalAnggaran = 0;
@@ -84,7 +85,8 @@ class AjuanKegiatanService
         return DB::transaction(function () use ($ajuan, $user, $validated, $file) {
             if ($file) {
                 $originalName = $file->getClientOriginalName();
-                $path = $file->store('dokumen_proposal', 'public');
+                $disk = config('filesystems.default', 'public');
+                $path = $file->store('dokumen_proposal', $disk);
                 $ajuan->dokumen_proposal = $path;
                 $ajuan->dokumen_nama_asli = $originalName;
             }

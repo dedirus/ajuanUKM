@@ -97,11 +97,16 @@ class MahasiswaController extends Controller
             ->where('ukm_id', $user->ukm_id)
             ->firstOrFail();
 
-        if (! Storage::disk('public')->exists($ajuan->dokumen_proposal)) {
-            abort(404, 'File dokumen proposal tidak ditemukan di server.');
+        $disk = config('filesystems.default', 'public');
+        if (! Storage::disk($disk)->exists($ajuan->dokumen_proposal)) {
+            if (Storage::disk('public')->exists($ajuan->dokumen_proposal)) {
+                $disk = 'public';
+            } else {
+                abort(404, 'File dokumen proposal tidak ditemukan di server.');
+            }
         }
 
-        return Storage::disk('public')->download($ajuan->dokumen_proposal, $ajuan->dokumen_nama_asli);
+        return Storage::disk($disk)->download($ajuan->dokumen_proposal, $ajuan->dokumen_nama_asli);
     }
 
     /**
@@ -247,10 +252,19 @@ class MahasiswaController extends Controller
             'surat_undangan' => ['path' => $lpj->surat_undangan, 'name' => $lpj->surat_undangan_nama],
         ];
 
-        if (! isset($fieldMap[$type]) || ! $fieldMap[$type]['path'] || ! Storage::disk('public')->exists($fieldMap[$type]['path'])) {
+        $disk = config('filesystems.default', 'public');
+        if (! isset($fieldMap[$type]) || ! $fieldMap[$type]['path']) {
             abort(404, 'Berkas LPJ tidak ditemukan di server.');
         }
 
-        return Storage::disk('public')->download($fieldMap[$type]['path'], $fieldMap[$type]['name'] ?? 'dokumen_lpj');
+        if (! Storage::disk($disk)->exists($fieldMap[$type]['path'])) {
+            if (Storage::disk('public')->exists($fieldMap[$type]['path'])) {
+                $disk = 'public';
+            } else {
+                abort(404, 'Berkas LPJ tidak ditemukan di server.');
+            }
+        }
+
+        return Storage::disk($disk)->download($fieldMap[$type]['path'], $fieldMap[$type]['name'] ?? 'dokumen_lpj');
     }
 }

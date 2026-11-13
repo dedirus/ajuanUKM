@@ -24,28 +24,30 @@ class LpjKegiatanService
             $lpj->ringkasan_kegiatan = $validated['ringkasan_kegiatan'] ?? null;
             $lpj->realisasi_anggaran = isset($validated['realisasi_anggaran']) ? (float) $validated['realisasi_anggaran'] : 0;
 
+            $disk = config('filesystems.default', 'public');
+
             if ($request->hasFile('file_sertifikat')) {
                 $file = $request->file('file_sertifikat');
                 $lpj->file_sertifikat_nama = $file->getClientOriginalName();
-                $lpj->file_sertifikat = $file->store('dokumen_lpj/sertifikat', 'public');
+                $lpj->file_sertifikat = $file->store('dokumen_lpj/sertifikat', $disk);
             }
 
             if ($request->hasFile('foto_kegiatan')) {
                 $file = $request->file('foto_kegiatan');
                 $lpj->foto_kegiatan_nama = $file->getClientOriginalName();
-                $lpj->foto_kegiatan = $file->store('dokumen_lpj/foto_kegiatan', 'public');
+                $lpj->foto_kegiatan = $file->store('dokumen_lpj/foto_kegiatan', $disk);
             }
 
             if ($request->hasFile('foto_penyerahan')) {
                 $file = $request->file('foto_penyerahan');
                 $lpj->foto_penyerahan_nama = $file->getClientOriginalName();
-                $lpj->foto_penyerahan = $file->store('dokumen_lpj/foto_penyerahan', 'public');
+                $lpj->foto_penyerahan = $file->store('dokumen_lpj/foto_penyerahan', $disk);
             }
 
             if ($request->hasFile('surat_undangan')) {
                 $file = $request->file('surat_undangan');
                 $lpj->surat_undangan_nama = $file->getClientOriginalName();
-                $lpj->surat_undangan = $file->store('dokumen_lpj/surat_undangan', 'public');
+                $lpj->surat_undangan = $file->store('dokumen_lpj/surat_undangan', $disk);
             }
 
             $lpj->submitted_at = now();

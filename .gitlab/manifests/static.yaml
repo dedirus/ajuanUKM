@@ -17,7 +17,14 @@ data:
 
   SESSION_DRIVER: "database"
   SESSION_SECURE_COOKIE: "true"
-  FILESYSTEM_DISK: "public"
+
+  # Mengaktifkan driver penyimpanan S3 (MinIO Unpad)
+  FILESYSTEM_DISK: "s3"
+  AWS_URL: "https://nodes.minio.unpad.dev"
+  AWS_ENDPOINT: "https://nodes.minio.unpad.dev"
+  AWS_DEFAULT_REGION: "id-dipatiukur-1"
+  AWS_USE_PATH_STYLE_ENDPOINT: "true"
+
   QUEUE_CONNECTION: "database"
   CACHE_STORE: "redis"
 
