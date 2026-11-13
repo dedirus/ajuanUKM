@@ -4,4 +4,4 @@ metadata:
   name: ${HELM_RELEASE_NAME}-config
   namespace: ${KUBE_NAMESPACE}
 data:
-  DUMMY_ENV: "production"
+  DUMMY_ENV: "staging"

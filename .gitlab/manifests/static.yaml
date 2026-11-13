@@ -6,7 +6,7 @@ metadata:
 data:
   APP_ENV: ${CI_ENVIRONMENT_NAME}
   APP_URL: ${CI_ENVIRONMENT_URL}
-  APP_NAME: "Attendance Service"
+  APP_NAME: "AjuanUKM"
   APP_DEBUG: "false"
 
   LOG_CHANNEL: "sentry"
@@ -14,7 +14,7 @@ data:
   DB_CONNECTION: "pgsql"
 
   SESSION_DRIVER: "database"
-  FILESYSTEM_DISK: "s3"
+  FILESYSTEM_DISK: "public"
   QUEUE_CONNECTION: "database"
   CACHE_STORE: "redis"
 

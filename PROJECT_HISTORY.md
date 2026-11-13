@@ -296,6 +296,26 @@ Dibuat 4 berkas migrasi:
 - **Verifikasi Rangkaian Uji Otomatis**:
   - Menjalankan seluruh rangkaian tes: **67 tests lolos 100% (429 assertions)**.
 
+### Fase 20: Integrasi Konfigurasi Deployment Platform Unpad (Kubernetes, Harbor & GitLab CI/CD)
+- **Integrasi GitLab CI/CD Terpusat**:
+  - Konfigurasi `.gitlab-ci.yml` terintegrasi dengan template resmi `unpad/devops/pipeline` (ref: `v4`).
+  - Target Staging: `https://kemahasiswaan.stg.unpad.ac.id/ajuanUKM`.
+  - Target Production: `https://kemahasiswaan.unpad.ac.id/ajuanUKM`.
+  - Otomatisasi migrasi database kontainer via `php artisan migrate --force`.
+- **Containerization dengan Harbor Registry**:
+  - Berkas `Dockerfile` berbasis `harbor2.unpad.dev/images/php:8.4`.
+  - Konfigurasi `.dockerignore` untuk optimasi transfer image.
+  - Tracking bundle asset produksi `public/build` (Vite, Tailwind, Alpine.js).
+- **Auto-Deploy Helm & Ingress Kubernetes**:
+  - Penyesuaian sub-path routing `/ajuanUKM` pada `.gitlab/auto-deploy-values.yaml`.
+  - Penambahan route health check `/up` untuk Startup Probe Kubernetes.
+  - Konfigurasi `TrustProxies` middleware agar mengenali `X-Forwarded-Prefix`, `X-Forwarded-Proto`, dan reverse proxy Unpad.
+  - Manifest ConfigMap staging & production pada `.gitlab/manifests/`.
+- **Dukungan Session & Queue Database**:
+  - Menambahkan migrasi tabel `sessions` dan `jobs` untuk mendukung session driver dan background queue database di lingkungan cloud/cluster.
+- **Monitoring & Quality Gate**:
+  - Konfigurasi `sentry/sentry-laravel` untuk error tracking dan `sonar-project.properties` untuk inspeksi kualitas kode.
+
 ---
 
 
