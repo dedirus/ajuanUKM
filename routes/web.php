@@ -24,8 +24,15 @@ Route::get('/', function () {
 });
 
 Route::get('/up', function () {
-    return "OK";
-});
+    return response('OK', 200)->header('Content-Type', 'text/plain');
+})->withoutMiddleware([
+    \App\Http\Middleware\EncryptCookies::class,
+    \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+    \Illuminate\Session\Middleware\StartSession::class,
+    \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+    \App\Http\Middleware\VerifyCsrfToken::class,
+    \Illuminate\Routing\Middleware\SubstituteBindings::class,
+]);
 
 // Central Dashboard Route
 Route::get('/dashboard', [DashboardController::class, 'index'])

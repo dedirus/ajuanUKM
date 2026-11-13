@@ -7,6 +7,7 @@ data:
   APP_ENV: ${CI_ENVIRONMENT_NAME}
   APP_URL: ${CI_ENVIRONMENT_URL}
   APP_NAME: "AjuanUKM"
+  APP_KEY: "base64:KlO3afdSMmDneOEeSoATwB9Aneobty3x51HfLNgV1Gw="
   APP_DEBUG: "false"
 
   LOG_CHANNEL: "sentry"
