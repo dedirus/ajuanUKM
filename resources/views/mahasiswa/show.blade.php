@@ -11,6 +11,12 @@
                     </span>
                     <span class="text-xs text-gray-400">• Tanggal: {{ $ajuan->tanggal_kegiatan->isoFormat('D MMMM Y') }}</span>
                     <span class="text-xs text-gray-400">• Diajukan {{ $ajuan->created_at->isoFormat('D MMMM Y, HH:mm') }}</span>
+                    @if($ajuan->tempat_kegiatan)
+                        <span class="text-xs text-slate-600 font-medium flex items-center gap-0.5">• 📍 {{ $ajuan->tempat_kegiatan }}</span>
+                    @endif
+                    @if($ajuan->link_undangan)
+                        <a href="{{ $ajuan->link_undangan }}" target="_blank" rel="noopener noreferrer" class="text-xs text-indigo-600 hover:text-indigo-800 font-semibold underline flex items-center gap-0.5">• 🔗 Undangan</a>
+                    @endif
                 </div>
                 <h2 class="font-black text-2xl text-gray-900 leading-tight">
                     {{ $ajuan->nama_kegiatan }}

@@ -413,6 +413,20 @@
                 {{ \Carbon\Carbon::parse($ajuan->tanggal_kegiatan)->translatedFormat('l, d F Y') }}
             </td>
         </tr>
+        @if($ajuan->tempat_kegiatan)
+        <tr>
+            <td class="info-label">Tempat / Lokasi Kegiatan</td>
+            <td class="info-separator">:</td>
+            <td class="info-value">{{ $ajuan->tempat_kegiatan }}</td>
+        </tr>
+        @endif
+        @if($ajuan->link_undangan)
+        <tr>
+            <td class="info-label">Tautan / Link Undangan</td>
+            <td class="info-separator">:</td>
+            <td class="info-value" style="color: #1d4ed8; word-break: break-all;">{{ $ajuan->link_undangan }}</td>
+        </tr>
+        @endif
         <tr>
             <td class="info-label">Ketua / Penanggung Jawab</td>
             <td class="info-separator">:</td>

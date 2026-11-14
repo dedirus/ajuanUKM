@@ -19,6 +19,8 @@ class AjuanKegiatan extends Model
         'nama_kegiatan',
         'tanggal_kegiatan',
         'jenis_kegiatan',
+        'tempat_kegiatan',
+        'link_undangan',
         'dokumen_proposal',
         'dokumen_nama_asli',
         'total_anggaran',

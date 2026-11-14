@@ -12,7 +12,7 @@ Dokumen ini merupakan cetak biru arsitektur komprehensif, pemetaan alur data, sk
 | **Tujuan Utama** | Digitalisasi pengajuan usulan kegiatan UKM, verifikasi berjenjang (Dosen Pembina & Biro Kemahasiswaan), penganggaran dinamis (RAB), penerbitan Lembar Pengesahan PDF resmi, serta pelaporan LPJ pasca-kegiatan terintegrasi pemeringkatan nasional **SIMKATMAWA** Kemendikbudristek. |
 | **Framework & Versi** | **Laravel 10.x** (`laravel/framework: ^10.0`) |
 | **Bahasa Pemrograman** | **PHP 8.4** (Kompatibel PHP >= 8.1) |
-| **Basis Data** | **MySQL 8.4+** (`ajuan_ukm`) |
+| **Basis Data** | **PostgreSQL** / **MySQL 8.4+** (`ajuan_ukm`) |
 | **Frontend Stack** | Blade Templates, Tailwind CSS 3.x, Alpine.js 3.x, Vite |
 | **Paket Utama** | `barryvdh/laravel-dompdf` (^3.1), `maatwebsite/excel` (^3.1), `laravel/breeze` (1.29), `laravel/sanctum` (^3.2) |
 | **Status Uji Otomatis** | **67 Feature & Unit Tests Passed (100%)** – 429 assertions |
@@ -130,6 +130,8 @@ erDiagram
         string nama_kegiatan
         date tanggal_kegiatan
         string jenis_kegiatan "Lomba, Pelatihan, Lainnya"
+        string tempat_kegiatan "nullable"
+        string link_undangan "nullable"
         string dokumen_proposal
         string dokumen_nama_asli
         decimal total_anggaran "15,2"

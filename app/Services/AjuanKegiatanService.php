@@ -33,6 +33,8 @@ class AjuanKegiatanService
                 'nama_kegiatan' => $validated['nama_kegiatan'],
                 'tanggal_kegiatan' => $validated['tanggal_kegiatan'],
                 'jenis_kegiatan' => $validated['jenis_kegiatan'],
+                'tempat_kegiatan' => $validated['tempat_kegiatan'] ?? null,
+                'link_undangan' => $validated['link_undangan'] ?? null,
                 'dokumen_proposal' => $path,
                 'dokumen_nama_asli' => $originalName,
                 'total_anggaran' => $totalAnggaran,
@@ -101,6 +103,8 @@ class AjuanKegiatanService
             $ajuan->nama_kegiatan = $validated['nama_kegiatan'];
             $ajuan->tanggal_kegiatan = $validated['tanggal_kegiatan'];
             $ajuan->jenis_kegiatan = $validated['jenis_kegiatan'];
+            $ajuan->tempat_kegiatan = $validated['tempat_kegiatan'] ?? null;
+            $ajuan->link_undangan = $validated['link_undangan'] ?? null;
             $ajuan->total_anggaran = $totalAnggaran;
 
             $statusSebelumnya = $ajuan->status_akhir;

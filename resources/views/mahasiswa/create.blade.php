@@ -78,6 +78,32 @@
                         @enderror
                     </div>
 
+                    <!-- Tempat Kegiatan -->
+                    <div>
+                        <label for="tempat_kegiatan" class="block text-sm font-semibold text-gray-700 mb-1">
+                            Tempat Kegiatan <span class="text-xs text-gray-400 font-normal">(Opsional)</span>
+                        </label>
+                        <input type="text" id="tempat_kegiatan" name="tempat_kegiatan" value="{{ old('tempat_kegiatan') }}"
+                               placeholder="Contoh: Bale Sawala Unpad / Zoom Meeting"
+                               class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm text-sm">
+                        @error('tempat_kegiatan')
+                            <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Link Undangan -->
+                    <div>
+                        <label for="link_undangan" class="block text-sm font-semibold text-gray-700 mb-1">
+                            Link Undangan <span class="text-xs text-gray-400 font-normal">(Opsional)</span>
+                        </label>
+                        <input type="text" id="link_undangan" name="link_undangan" value="{{ old('link_undangan') }}"
+                               placeholder="Contoh: https://meet.google.com/xyz atau tautan berkas undangan"
+                               class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm text-sm">
+                        @error('link_undangan')
+                            <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Upload Dokumen Kegiatan (Proposal / ToR) -->
                     <div class="md:col-span-2">
                         <label class="block text-sm font-semibold text-gray-700 mb-1">

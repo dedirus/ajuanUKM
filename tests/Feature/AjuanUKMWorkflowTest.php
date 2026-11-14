@@ -45,6 +45,8 @@ class AjuanUKMWorkflowTest extends TestCase
             'nama_kegiatan' => 'RoboFest Championship 2026',
             'tanggal_kegiatan' => now()->addDays(20)->toDateString(),
             'jenis_kegiatan' => 'Lomba',
+            'tempat_kegiatan' => 'Auditorium Gedung Rektorat Unpad',
+            'link_undangan' => 'https://meet.google.com/rbf-2026',
             'dokumen_kegiatan' => $file,
             'items' => [
                 [
@@ -78,6 +80,8 @@ class AjuanUKMWorkflowTest extends TestCase
             'nama_kegiatan' => 'RoboFest Championship 2026',
             'ukm_id' => $mahasiswa->ukm_id,
             'jenis_kegiatan' => 'Lomba',
+            'tempat_kegiatan' => 'Auditorium Gedung Rektorat Unpad',
+            'link_undangan' => 'https://meet.google.com/rbf-2026',
             'status_pembina' => 'belum_disetujui',
             'status_kemahasiswaan' => 'belum_disetujui',
             'status_akhir' => 'menunggu_pembina',

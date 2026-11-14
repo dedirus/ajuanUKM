@@ -41,6 +41,12 @@
                 <div><span class="text-gray-400">UKM:</span> <span class="font-bold text-gray-800">{{ $ajuan->ukm->nama_ukm }}</span></div>
                 <div><span class="text-gray-400">Jenis Kegiatan:</span> <span class="font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-md border border-purple-200">{{ $ajuan->jenis_kegiatan ?? 'Lainnya' }}</span></div>
                 <div><span class="text-gray-400">Tanggal Pelaksanaan:</span> <span class="font-bold text-gray-800">{{ \Carbon\Carbon::parse($ajuan->tanggal_kegiatan)->isoFormat('D MMMM Y') }}</span></div>
+                @if($ajuan->tempat_kegiatan)
+                    <div><span class="text-gray-400">Tempat Kegiatan:</span> <span class="font-bold text-gray-800">📍 {{ $ajuan->tempat_kegiatan }}</span></div>
+                @endif
+                @if($ajuan->link_undangan)
+                    <div><span class="text-gray-400">Link Undangan:</span> <a href="{{ $ajuan->link_undangan }}" target="_blank" rel="noopener noreferrer" class="font-bold text-indigo-600 hover:text-indigo-800 underline">🔗 Buka Undangan</a></div>
+                @endif
                 <div><span class="text-gray-400">Total Anggaran:</span> <span class="font-black text-indigo-700 font-mono text-sm">Rp {{ number_format($ajuan->total_anggaran, 0, ',', '.') }}</span></div>
                 <div><span class="text-gray-400">Dokumen Lampiran:</span> <span class="font-medium text-gray-700">{{ $ajuan->dokumen_nama_asli }}</span></div>
             </div>

@@ -64,6 +64,22 @@
                     </div>
                 </div>
             </div>
+            @if($ajuan->tempat_kegiatan || $ajuan->link_undangan)
+                <div class="mt-4 pt-3 border-t border-gray-100 flex flex-wrap items-center gap-6 text-xs text-gray-600">
+                    @if($ajuan->tempat_kegiatan)
+                        <div>
+                            <span class="text-gray-400 font-semibold uppercase">Tempat Kegiatan:</span>
+                            <span class="font-bold text-gray-800 ml-1">📍 {{ $ajuan->tempat_kegiatan }}</span>
+                        </div>
+                    @endif
+                    @if($ajuan->link_undangan)
+                        <div>
+                            <span class="text-gray-400 font-semibold uppercase">Link Undangan:</span>
+                            <a href="{{ $ajuan->link_undangan }}" target="_blank" rel="noopener noreferrer" class="font-bold text-indigo-600 hover:text-indigo-800 underline ml-1">🔗 Buka Tautan</a>
+                        </div>
+                    @endif
+                </div>
+            @endif
         </div>
 
         <!-- Tabel Detail Ajuan Kegiatan -->
