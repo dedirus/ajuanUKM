@@ -18,7 +18,7 @@
             padding: 0;
         }
 
-        /* Kop Surat */
+        /* Kop Surat Resmi */
         .kop-table {
             width: 100%;
             border-collapse: collapse;
@@ -31,8 +31,16 @@
         }
 
         .kop-logo-box {
-            width: 65px;
+            width: 85px;
             text-align: center;
+            vertical-align: middle;
+        }
+
+        .kop-logo-img {
+            width: 78px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
         }
 
         .kop-logo-circle {
@@ -51,24 +59,27 @@
         .kop-text {
             text-align: center;
             padding-left: 10px;
+            font-family: "Times New Roman", Times, "DejaVu Serif", serif;
         }
 
-        .kop-instansi {
+        .kop-kementerian {
             font-size: 10.5pt;
-            font-weight: bold;
+            font-weight: normal;
             letter-spacing: 0.5px;
-            color: #334155;
+            color: #000000;
+            line-height: 1.25;
             text-transform: uppercase;
             margin: 0;
         }
 
         .kop-universitas {
-            font-size: 13.5pt;
+            font-size: 14pt;
             font-weight: bold;
             letter-spacing: 0.8px;
-            color: #0f172a;
+            color: #000000;
+            line-height: 1.25;
             text-transform: uppercase;
-            margin: 2px 0;
+            margin: 2px 0 2px 0;
         }
 
         .kop-unit {
@@ -80,22 +91,43 @@
         }
 
         .kop-alamat {
-            font-size: 7.5pt;
-            color: #64748b;
-            margin-top: 3px;
+            font-size: 8.5pt;
+            color: #000000;
+            line-height: 1.25;
+            margin: 0;
+        }
+
+        .kop-kontak {
+            font-size: 8.5pt;
+            color: #000000;
+            line-height: 1.25;
+            margin-top: 1px;
+        }
+
+        .kop-link {
+            color: #0044cc;
+            text-decoration: underline;
         }
 
         .kop-line-thick {
             border: none;
-            border-top: 2.5px solid #0f172a;
+            border-top: 2.5px solid #000000;
             margin-top: 8px;
             margin-bottom: 2px;
         }
 
         .kop-line-thin {
             border: none;
-            border-top: 0.8px solid #0f172a;
+            border-top: 0.8px solid #000000;
             margin-top: 0;
+            margin-bottom: 12px;
+        }
+
+        .kop-divider-double {
+            border-top: 2.5px solid #000000;
+            border-bottom: 0.8px solid #000000;
+            height: 2px;
+            margin-top: 6px;
             margin-bottom: 12px;
         }
 
@@ -350,25 +382,53 @@
 <body>
 
     <!-- KOP SURAT RESMI -->
-    <table class="kop-table">
-        <tr>
-            <td class="kop-logo-box">
-                <div class="kop-logo-circle">U</div>
-            </td>
-            <td class="kop-text">
-                <div class="kop-instansi">Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi</div>
-                <div class="kop-universitas">Universitas ServBay Indonesia</div>
-                <div class="kop-unit">Biro Kemahasiswaan dan Pengembangan Karir Alumni</div>
-                <div class="kop-alamat">
-                    Gedung Pelayanan Mahasiswa Lt. 2 | Jalan Kampus Terpadu No. 1, Surabaya 60115<br>
-                    Telepon: (031) 5928812 | Laman: https://univ.ac.id | Surel: kemahasiswaan@univ.ac.id
-                </div>
-            </td>
-        </tr>
-    </table>
-
-    <hr class="kop-line-thick">
-    <hr class="kop-line-thin">
+    @if($ajuan->status_akhir === 'disetujui')
+        <!-- KOP RESMI UNIVERSITAS PADJADJARAN (AJUAN TELAH DISETUJUI) -->
+        <table class="kop-table">
+            <tr>
+                <td class="kop-logo-box">
+                    @php
+                        $unpadLogoPath = public_path('images/unpad_logo.png');
+                        $unpadLogoBase64 = file_exists($unpadLogoPath) ? base64_encode(file_get_contents($unpadLogoPath)) : '';
+                    @endphp
+                    @if($unpadLogoBase64)
+                        <img src="data:image/png;base64,{{ $unpadLogoBase64 }}" class="kop-logo-img" alt="Logo Unpad">
+                    @endif
+                </td>
+                <td class="kop-text">
+                    <div class="kop-kementerian">KEMENTERIAN PENDIDIKAN, KEBUDAYAAN,<br>RISET, DAN TEKNOLOGI</div>
+                    <div class="kop-universitas">UNIVERSITAS PADJADJARAN</div>
+                    <div class="kop-alamat">Jalan Dipati Ukur No. 35 Bandung 40132</div>
+                    <div class="kop-alamat">Jalan Ir. Soekarno Km. 21 Jatinangor, Sumedang 45363</div>
+                    <div class="kop-kontak">
+                        Telepon (022) 84288888 Laman: <span class="kop-link">www.unpad.ac.id</span>, Email: <span class="kop-link">humas@unpad.ac.id</span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div class="kop-divider-double"></div>
+    @else
+        <!-- KOP DRAF / DISPOSISI SEMENTARA (BELUM DISETUJUI) -->
+        <table class="kop-table">
+            <tr>
+                <td class="kop-logo-box">
+                    @php
+                        $unpadLogoPath = public_path('images/unpad_logo.png');
+                        $unpadLogoBase64 = file_exists($unpadLogoPath) ? base64_encode(file_get_contents($unpadLogoPath)) : '';
+                    @endphp
+                    @if($unpadLogoBase64)
+                        <img src="data:image/png;base64,{{ $unpadLogoBase64 }}" class="kop-logo-img" alt="Logo Unpad" style="opacity: 0.6;">
+                    @endif
+                </td>
+                <td class="kop-text">
+                    <div class="kop-kementerian">UNIVERSITAS PADJADJARAN</div>
+                    <div class="kop-universitas" style="font-size: 11.5pt; color: #334155;">DIREKTORAT KEMAHASISWAAN DAN HUBUNGAN ALUMNI</div>
+                    <div class="kop-alamat" style="color: #64748b; font-style: italic;">Lembar Usulan Kegiatan (Belum Disahkan / Dalam Proses Verifikasi)</div>
+                </td>
+            </tr>
+        </table>
+        <div style="border-top: 1.5px dashed #94a3b8; margin-top: 6px; margin-bottom: 12px;"></div>
+    @endif
 
     <!-- JUDUL DOKUMEN & NOMOR -->
     <div class="doc-header">
@@ -591,7 +651,7 @@
         Dokumen ini diterbitkan secara otomatis dan sah oleh <strong>Sistem Informasi Pengajuan Kegiatan Mahasiswa (AjuanUKM)</strong>.<br>
         Dicetak pada: {{ \Carbon\Carbon::now()->translatedFormat('d F Y, H:i:s') }} WIB &nbsp;|&nbsp;
         Kode Dokumen: {{ $nomorSurat }} &nbsp;|&nbsp;
-        Arsip Digital Biro Kemahasiswaan & Alumni Universitas ServBay Indonesia
+        Arsip Digital Direktorat Kemahasiswaan dan Hubungan Alumni Universitas Padjadjaran
     </div>
 
 </body>
