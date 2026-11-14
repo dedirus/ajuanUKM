@@ -381,54 +381,30 @@
 </head>
 <body>
 
-    <!-- KOP SURAT RESMI -->
-    @if($ajuan->status_akhir === 'disetujui')
-        <!-- KOP RESMI UNIVERSITAS PADJADJARAN (AJUAN TELAH DISETUJUI) -->
-        <table class="kop-table">
-            <tr>
-                <td class="kop-logo-box">
-                    @php
-                        $unpadLogoPath = public_path('images/unpad_logo.png');
-                        $unpadLogoBase64 = file_exists($unpadLogoPath) ? base64_encode(file_get_contents($unpadLogoPath)) : '';
-                    @endphp
-                    @if($unpadLogoBase64)
-                        <img src="data:image/png;base64,{{ $unpadLogoBase64 }}" class="kop-logo-img" alt="Logo Unpad">
-                    @endif
-                </td>
-                <td class="kop-text">
-                    <div class="kop-kementerian">KEMENTERIAN PENDIDIKAN, KEBUDAYAAN,<br>RISET, DAN TEKNOLOGI</div>
-                    <div class="kop-universitas">UNIVERSITAS PADJADJARAN</div>
-                    <div class="kop-alamat">Jalan Dipati Ukur No. 35 Bandung 40132</div>
-                    <div class="kop-alamat">Jalan Ir. Soekarno Km. 21 Jatinangor, Sumedang 45363</div>
-                    <div class="kop-kontak">
-                        Telepon (022) 84288888 Laman: <span class="kop-link">www.unpad.ac.id</span>, Email: <span class="kop-link">humas@unpad.ac.id</span>
-                    </div>
-                </td>
-            </tr>
-        </table>
-        <div class="kop-divider-double"></div>
-    @else
-        <!-- KOP DRAF / DISPOSISI SEMENTARA (BELUM DISETUJUI) -->
-        <table class="kop-table">
-            <tr>
-                <td class="kop-logo-box">
-                    @php
-                        $unpadLogoPath = public_path('images/unpad_logo.png');
-                        $unpadLogoBase64 = file_exists($unpadLogoPath) ? base64_encode(file_get_contents($unpadLogoPath)) : '';
-                    @endphp
-                    @if($unpadLogoBase64)
-                        <img src="data:image/png;base64,{{ $unpadLogoBase64 }}" class="kop-logo-img" alt="Logo Unpad" style="opacity: 0.6;">
-                    @endif
-                </td>
-                <td class="kop-text">
-                    <div class="kop-kementerian">UNIVERSITAS PADJADJARAN</div>
-                    <div class="kop-universitas" style="font-size: 11.5pt; color: #334155;">DIREKTORAT KEMAHASISWAAN DAN HUBUNGAN ALUMNI</div>
-                    <div class="kop-alamat" style="color: #64748b; font-style: italic;">Lembar Usulan Kegiatan (Belum Disahkan / Dalam Proses Verifikasi)</div>
-                </td>
-            </tr>
-        </table>
-        <div style="border-top: 1.5px dashed #94a3b8; margin-top: 6px; margin-bottom: 12px;"></div>
-    @endif
+    <!-- KOP SURAT RESMI UNIVERSITAS PADJADJARAN -->
+    <table class="kop-table">
+        <tr>
+            <td class="kop-logo-box">
+                @php
+                    $unpadLogoPath = public_path('images/unpad_logo.png');
+                    $unpadLogoBase64 = file_exists($unpadLogoPath) ? base64_encode(file_get_contents($unpadLogoPath)) : '';
+                @endphp
+                @if($unpadLogoBase64)
+                    <img src="data:image/png;base64,{{ $unpadLogoBase64 }}" class="kop-logo-img" alt="Logo Unpad">
+                @endif
+            </td>
+            <td class="kop-text">
+                <div class="kop-kementerian">KEMENTERIAN PENDIDIKAN, KEBUDAYAAN,<br>RISET, DAN TEKNOLOGI</div>
+                <div class="kop-universitas">UNIVERSITAS PADJADJARAN</div>
+                <div class="kop-alamat">Jalan Dipati Ukur No. 35 Bandung 40132</div>
+                <div class="kop-alamat">Jalan Ir. Soekarno Km. 21 Jatinangor, Sumedang 45363</div>
+                <div class="kop-kontak">
+                    Telepon (022) 84288888 Laman: <span class="kop-link">www.unpad.ac.id</span>, Email: <span class="kop-link">humas@unpad.ac.id</span>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div class="kop-divider-double"></div>
 
     <!-- JUDUL DOKUMEN & NOMOR -->
     <div class="doc-header">

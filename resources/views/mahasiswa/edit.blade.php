@@ -29,7 +29,7 @@
         </div>
     </x-slot>
 
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6" x-data="editForm()">
+    <div class="w-full max-w-7xl xl:max-w-[1600px] 2xl:max-w-[1800px] mx-auto px-2 sm:px-4 lg:px-6 space-y-6" x-data="editForm()">
 
         @if($ajuan->isPerluRevisi())
             <!-- Banner Catatan Revisi dari Verifikator -->

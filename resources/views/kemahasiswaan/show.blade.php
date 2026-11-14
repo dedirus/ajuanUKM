@@ -28,7 +28,7 @@
         </div>
     </x-slot>
 
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6" x-data="kemahasiswaanReview()">
+    <div class="w-full max-w-7xl xl:max-w-[1600px] 2xl:max-w-[1800px] mx-auto px-2 sm:px-4 lg:px-6 space-y-6" x-data="kemahasiswaanReview()">
 
         <!-- Status & Verifikasi Pembina Card -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -215,71 +215,71 @@
             </div>
 
             <!-- Tabel Detail dengan Checklist & Edit Interaktif -->
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 text-xs">
-                    <thead class="bg-slate-100 text-slate-700 font-bold uppercase tracking-wider">
+            <div class="w-full overflow-x-auto">
+                <table class="w-full divide-y divide-gray-200 text-xs">
+                    <thead class="bg-slate-100 text-slate-700 font-bold uppercase tracking-wider text-[11px]">
                         <tr>
-                            <th class="px-3 py-3 text-center w-12">No</th>
-                            <th class="px-3 py-3 text-left min-w-[130px]">Nama Akun</th>
-                            <th class="px-3 py-3 text-left min-w-[180px]">Nama Barang / Item</th>
-                            <th class="px-3 py-3 text-right min-w-[120px]">Harga Satuan</th>
-                            <th class="px-2 py-3 text-center min-w-[65px]">Jumlah</th>
-                            <th class="px-2 py-3 text-center min-w-[85px]">Satuan</th>
-                            <th class="px-2 py-3 text-center min-w-[65px]">Durasi</th>
-                            <th class="px-2 py-3 text-center min-w-[85px]">Sat. Durasi</th>
-                            <th class="px-3 py-3 text-right min-w-[120px]">Total</th>
+                            <th class="px-2 py-2.5 text-center w-8">No</th>
+                            <th class="px-2 py-2.5 text-left min-w-[110px]">Nama Akun</th>
+                            <th class="px-2 py-2.5 text-left min-w-[140px]">Nama Barang / Item</th>
+                            <th class="px-2 py-2.5 text-right min-w-[95px]">Harga Satuan</th>
+                            <th class="px-1 py-2.5 text-center min-w-[45px]">Jumlah</th>
+                            <th class="px-1 py-2.5 text-center min-w-[65px]">Satuan</th>
+                            <th class="px-1 py-2.5 text-center min-w-[45px]">Durasi</th>
+                            <th class="px-1 py-2.5 text-center min-w-[65px]">Sat. Durasi</th>
+                            <th class="px-2 py-2.5 text-right min-w-[95px]">Total</th>
                             <!-- Kolom Keterangan berupa Checklist Disetujui / Tidak Disetujui -->
-                            <th class="px-4 py-3 text-center min-w-[210px] bg-indigo-50/70 text-indigo-900 border-x border-indigo-100">
+                            <th class="px-2 py-2.5 text-center min-w-[170px] bg-indigo-50/70 text-indigo-900 border-x border-indigo-100">
                                 Keterangan (Persetujuan)
                             </th>
-                            <th class="px-3 py-3 text-left min-w-[180px]">Catatan Verifikator</th>
-                            <th x-show="isEditingRab" class="px-2 py-3 text-center w-12 text-rose-600">Aksi</th>
+                            <th class="px-2 py-2.5 text-left min-w-[120px]">Catatan Verifikator</th>
+                            <th x-show="isEditingRab" class="px-1 py-2.5 text-center w-8 text-rose-600">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 bg-white">
                         <template x-for="(item, index) in items" :key="index">
                             <tr class="hover:bg-slate-50 transition" :class="isEditingRab ? 'bg-amber-50/10' : ''">
                                 <!-- No -->
-                                <td class="px-3 py-3 text-center font-bold text-gray-400">
+                                <td class="px-2 py-2 text-center font-bold text-gray-400">
                                     <span x-text="index + 1"></span>
                                     <input type="hidden" :name="'items[' + index + '][id]'" :value="item.id">
                                 </td>
 
                                 <!-- Nama Akun -->
-                                <td class="px-3 py-3">
-                                    <div x-show="!isEditingRab" class="font-semibold text-gray-800" x-text="item.nama_akun"></div>
+                                <td class="px-2 py-2">
+                                    <div x-show="!isEditingRab" class="font-semibold text-gray-800 break-words" x-text="item.nama_akun"></div>
                                     <input x-show="isEditingRab" type="text" :name="'items[' + index + '][nama_akun]'" x-model="item.nama_akun"
                                            placeholder="Nama Akun"
-                                           class="w-full rounded-lg border-gray-300 text-xs focus:ring-indigo-500 focus:border-indigo-500 p-1.5 font-semibold">
+                                           class="w-full rounded-md border-gray-300 text-xs focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 p-1.5 font-semibold">
                                 </td>
 
                                 <!-- Nama Barang -->
-                                <td class="px-3 py-3">
-                                    <div x-show="!isEditingRab" class="font-medium text-gray-900" x-text="item.nama_barang"></div>
+                                <td class="px-2 py-2">
+                                    <div x-show="!isEditingRab" class="font-medium text-gray-900 break-words" x-text="item.nama_barang"></div>
                                     <input x-show="isEditingRab" type="text" :name="'items[' + index + '][nama_barang]'" x-model="item.nama_barang"
                                            placeholder="Nama Barang / Item"
-                                           class="w-full rounded-lg border-gray-300 text-xs focus:ring-indigo-500 focus:border-indigo-500 p-1.5 font-medium">
+                                           class="w-full rounded-md border-gray-300 text-xs focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 p-1.5 font-medium">
                                 </td>
 
                                 <!-- Harga Satuan -->
-                                <td class="px-3 py-3">
-                                    <div x-show="!isEditingRab" class="text-right font-mono text-gray-700" x-text="formatRupiah(item.harga_satuan)"></div>
+                                <td class="px-2 py-2">
+                                    <div x-show="!isEditingRab" class="text-right font-mono text-gray-700 whitespace-nowrap" x-text="formatRupiah(item.harga_satuan)"></div>
                                     <input x-show="isEditingRab" type="number" min="0" step="1000" :name="'items[' + index + '][harga_satuan]'" x-model.number="item.harga_satuan"
-                                           class="w-full text-right font-mono rounded-lg border-gray-300 text-xs focus:ring-indigo-500 focus:border-indigo-500 p-1.5">
+                                           class="w-full text-right font-mono rounded-md border-gray-300 text-xs focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 p-1.5">
                                 </td>
 
                                 <!-- Jumlah -->
-                                <td class="px-2 py-3">
+                                <td class="px-1 py-2">
                                     <div x-show="!isEditingRab" class="text-center font-mono font-semibold text-gray-900" x-text="item.jumlah"></div>
                                     <input x-show="isEditingRab" type="number" min="1" step="1" :name="'items[' + index + '][jumlah]'" x-model.number="item.jumlah"
-                                           class="w-full text-center font-mono rounded-lg border-gray-300 text-xs focus:ring-indigo-500 focus:border-indigo-500 p-1.5 font-semibold">
+                                           class="w-full text-center font-mono rounded-md border-gray-300 text-xs focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 p-1.5 font-semibold">
                                 </td>
 
                                 <!-- Satuan -->
-                                <td class="px-2 py-3">
+                                <td class="px-1 py-2">
                                     <div x-show="!isEditingRab" class="text-center font-medium text-gray-700" x-text="item.satuan || '-'"></div>
                                     <select x-show="isEditingRab" :name="'items[' + index + '][satuan]'" x-model="item.satuan"
-                                            class="w-full text-center rounded-lg border-gray-300 text-xs focus:ring-indigo-500 focus:border-indigo-500 p-1.5 bg-white font-medium">
+                                            class="w-full text-center rounded-md border-gray-300 text-xs focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 p-1.5 bg-white font-medium">
                                         @foreach($satuans as $satuan)
                                             <option value="{{ $satuan->nama_satuan }}">{{ $satuan->nama_satuan }}</option>
                                         @endforeach
@@ -287,17 +287,17 @@
                                 </td>
 
                                 <!-- Durasi -->
-                                <td class="px-2 py-3">
+                                <td class="px-1 py-2">
                                     <div x-show="!isEditingRab" class="text-center font-mono text-gray-700" x-text="item.durasi"></div>
                                     <input x-show="isEditingRab" type="number" min="1" step="0.5" :name="'items[' + index + '][durasi]'" x-model.number="item.durasi"
-                                           class="w-full text-center font-mono rounded-lg border-gray-300 text-xs focus:ring-indigo-500 focus:border-indigo-500 p-1.5">
+                                           class="w-full text-center font-mono rounded-md border-gray-300 text-xs focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 p-1.5">
                                 </td>
 
                                 <!-- Satuan Durasi -->
-                                <td class="px-2 py-3">
+                                <td class="px-1 py-2">
                                     <div x-show="!isEditingRab" class="text-center font-medium text-gray-700" x-text="item.satuan_durasi || 'Hari'"></div>
                                     <select x-show="isEditingRab" :name="'items[' + index + '][satuan_durasi]'" x-model="item.satuan_durasi"
-                                            class="w-full text-center rounded-lg border-gray-300 text-xs focus:ring-indigo-500 focus:border-indigo-500 p-1.5 bg-white font-medium">
+                                            class="w-full text-center rounded-md border-gray-300 text-xs focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 p-1.5 bg-white font-medium">
                                         @foreach($satuans as $satuan)
                                             <option value="{{ $satuan->nama_satuan }}">{{ $satuan->nama_satuan }}</option>
                                         @endforeach
@@ -305,40 +305,40 @@
                                 </td>
 
                                 <!-- Total -->
-                                <td class="px-3 py-3 text-right font-mono font-bold text-indigo-700" x-text="formatRupiah(calculateRowTotal(item))"></td>
+                                <td class="px-2 py-2 text-right font-mono font-bold text-indigo-700 whitespace-nowrap" x-text="formatRupiah(calculateRowTotal(item))"></td>
 
                                 <!-- Kolom Keterangan: Checklist Disetujui / Tidak Disetujui -->
-                                <td class="px-4 py-3 bg-indigo-50/20 border-x border-indigo-100">
-                                    <div class="flex items-center justify-center space-x-2">
+                                <td class="px-2 py-2 bg-indigo-50/20 border-x border-indigo-100">
+                                    <div class="flex items-center justify-center gap-1.5">
                                         <!-- Opsi Disetujui -->
-                                        <label class="inline-flex items-center px-2 py-1 rounded-lg border cursor-pointer transition text-xs font-semibold"
+                                        <label class="inline-flex items-center px-2 py-1 rounded-lg border cursor-pointer transition text-[11px] font-semibold"
                                                :class="item.status_keterangan === 'disetujui' ? 'bg-emerald-100 border-emerald-400 text-emerald-900' : 'bg-white border-gray-200 text-gray-600 hover:border-emerald-300'">
                                             <input type="radio" :name="'items[' + index + '][status_keterangan]'" value="disetujui"
                                                    x-model="item.status_keterangan"
                                                    class="text-emerald-600 focus:ring-emerald-500 w-3.5 h-3.5">
-                                            <span class="ms-1">✓ Disetujui</span>
+                                            <span class="ms-1 whitespace-nowrap">✓ Disetujui</span>
                                         </label>
 
                                         <!-- Opsi Tidak Disetujui -->
-                                        <label class="inline-flex items-center px-2 py-1 rounded-lg border cursor-pointer transition text-xs font-semibold"
+                                        <label class="inline-flex items-center px-2 py-1 rounded-lg border cursor-pointer transition text-[11px] font-semibold"
                                                :class="item.status_keterangan === 'tidak_disetujui' ? 'bg-rose-100 border-rose-400 text-rose-900' : 'bg-white border-gray-200 text-gray-600 hover:border-rose-300'">
                                             <input type="radio" :name="'items[' + index + '][status_keterangan]'" value="tidak_disetujui"
                                                    x-model="item.status_keterangan"
                                                    class="text-rose-600 focus:ring-rose-500 w-3.5 h-3.5">
-                                            <span class="ms-1">✗ Tdk Disetujui</span>
+                                            <span class="ms-1 whitespace-nowrap">✗ Tdk Disetujui</span>
                                         </label>
                                     </div>
                                 </td>
 
                                 <!-- Catatan Verifikator per baris -->
-                                <td class="px-3 py-3">
+                                <td class="px-2 py-2">
                                     <input type="text" :name="'items[' + index + '][catatan]'" x-model="item.catatan"
                                            placeholder="Tulis catatan penyesuaian..."
-                                           class="w-full rounded-lg border-gray-300 text-xs focus:ring-indigo-500 focus:border-indigo-500 p-1.5">
+                                           class="w-full rounded-md border-gray-300 text-xs focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 p-1.5">
                                 </td>
 
                                 <!-- Tombol Hapus Baris (hanya saat mode edit aktif) -->
-                                <td x-show="isEditingRab" class="px-2 py-3 text-center">
+                                <td x-show="isEditingRab" class="px-1 py-2 text-center">
                                     <button type="button" @click="removeRow(index)"
                                             class="p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition"
                                             title="Hapus baris kebutuhan ini">
@@ -350,13 +350,13 @@
                     </tbody>
                     <tfoot class="bg-slate-50 border-t-2 border-gray-200 font-bold text-xs text-gray-800">
                         <tr>
-                            <td colspan="8" class="px-4 py-3 text-right uppercase tracking-wider text-gray-600">
+                            <td colspan="8" class="px-3 py-2.5 text-right uppercase tracking-wider text-gray-600 text-[11px]">
                                 Total Anggaran Usulan Kegiatan:
                             </td>
-                            <td class="px-4 py-3 text-right text-sm text-indigo-700 font-mono font-black" x-text="formatRupiah(grandTotal())">
+                            <td class="px-2 py-2.5 text-right text-xs sm:text-sm text-indigo-700 font-mono font-black whitespace-nowrap" x-text="formatRupiah(grandTotal())">
                                 Rp {{ number_format($ajuan->total_anggaran, 0, ',', '.') }}
                             </td>
-                            <td :colspan="isEditingRab ? 3 : 2" class="px-4 py-3 text-right">
+                            <td :colspan="isEditingRab ? 3 : 2" class="px-3 py-2.5 text-right">
                                 <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-sm transition gap-1.5">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
                                     <span>Simpan Perubahan RAB & Checklist</span>
