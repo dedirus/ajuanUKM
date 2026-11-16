@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM harbor2.unpad.dev/images/php:8.4 AS base
+FROM harbor2.unpad.dev/images/php:8.4@sha256:98856b64569d561af5748b81dceb4d04642af83743a488380f646ffd2094cc2e AS base
 
 ENV COMPOSER_HOME=/tmp/composer
 
